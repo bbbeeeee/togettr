@@ -1,5 +1,19 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	h1= title
+	p Welcome to #{title}
+	br
+	p Log in
+	br
+	form(action='/auth/local', method='post')
+		input(type='text', name='username')
+		input(type='password', name='password')
+		input(type='submit')
+	br
+	p Sign Up
+	br
+	form(action='signup', method='post')
+		input(type='text', name='email')
+		input(type='password', name='password')
+		input(type='submit')

@@ -4,13 +4,32 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , mongodb = require('mongodb')
+  , passport = require('passport')
+  , bcrypt = require('bcrypt')
+  , FacebookStrategy = require('passport-facebook').Strategy
+  , LocalStrategy = require('passport-local').Strategy
+  , config = require('./config/config').production
+  , validation = require('./modules/validation')
+  , MongoStore = require('connect-mongo')(express)
+  , MongoClient = require('mongodb').MongoClient
+  , Server = require('mongodb').Server
+  , mongo = require('./config/mongodb');
 
+
+
+/*
+passport.use(new FacebookStrategy({
+		clientID: con.FACEBOOK_ID,
+		clientSecret: con.FACEBOOK_SECRET,
+		callbackURL: 'http://localhost:3000/auth/facebook/callback'
+	},
+	function(accessToken, refreshToken, profile, done)
+));
+*/
 var app = express();
-
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
@@ -19,16 +38,41 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use( express.cookieParser() );
+app.use(express.session({
+    secret: "lol",
+    store: new MongoStore({
+      url: config.db,
+      collection : 'sessions'
+    })
+  }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(app.router);
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/users', user.list);
+MongoClient.connect("mongodb://localhost:27017/youtaan", function(err, db){
+  if(err) return callback(err);
+
+  require('./config/passport')(passport, config, db);
+
+  require('./config/routes')(app, passport, db);
+
+});
+
+
+
+
+
+
+
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

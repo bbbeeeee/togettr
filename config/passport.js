@@ -19,7 +19,7 @@ var Db = require('mongodb').Db
 var mongoClient = new MongoClient(new Server("localhost", 27017));
 
 
-
+//pooooooooooop
 
 module.exports = function(passport, config, db) {
 

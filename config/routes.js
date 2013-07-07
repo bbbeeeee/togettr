@@ -10,6 +10,7 @@ var mongoose = require('mongoose')
 	, user = require('../controllers/user.js')
 	, controllers = require('../controllers');
 module.exports = function(app, passport, db){
+	
 
 	app.get('/', controllers.index);
 	app.get('/failed', controllers.failed);

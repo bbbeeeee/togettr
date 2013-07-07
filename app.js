@@ -19,16 +19,6 @@ var express = require('express')
   , mongo = require('./config/mongodb');
 
 
-
-/*
-passport.use(new FacebookStrategy({
-		clientID: con.FACEBOOK_ID,
-		clientSecret: con.FACEBOOK_SECRET,
-		callbackURL: 'http://localhost:3000/auth/facebook/callback'
-	},
-	function(accessToken, refreshToken, profile, done)
-));
-*/
 var app = express();
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -59,7 +49,10 @@ if ('development' == app.get('env')) {
 
 MongoClient.connect("mongodb://localhost:27017/youtaan", function(err, db){
   if(err) return callback(err);
-
+  //give all controllers access to db
+  require('./controllers/index').getDb(db);
+  require('./controllers/user').getDb(db);
+  //give routes, passport, etc access to db
   require('./config/passport')(passport, config, db);
 
   require('./config/routes')(app, passport, db);

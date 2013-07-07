@@ -14,6 +14,12 @@ var Db = require('mongodb').Db
 	, FacebookStrategy = require('passport-facebook').Strategy;
 var mongoClient = new MongoClient(new Server("localhost", 27017));
 
+var db;
+
+exports.getDb = function(_db){
+	db = _db;
+}
+
 exports.login = function(req, res){
   res.send('lol');
 }

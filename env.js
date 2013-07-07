@@ -5,3 +5,8 @@ var SESSION_SECRET = process.env.SESSION_SECRET || 'CHANGE_ME';
 
 var db = null;
 
+var initialize = function(callback){
+
+
+	
+}

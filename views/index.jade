@@ -13,7 +13,21 @@ block content
 	br
 	p Sign Up
 	br
-	form(action='signup', method='post')
-		input(type='text', name='email')
-		input(type='password', name='password')
+	form(action='/auth/signup', method='post')
+		label First name
+		br
+		input(type='text', maxlength='25', name='firstname')
+		br
+		label Last name
+		br
+		input(type='text', maxlength='40', name='lastname')
+		br
+		label Email
+		br
+		input(type='text', name='email', maxlength='200')
+		br
+		label Password
+		br
+		input(type='password', name='password', maxlength='200')
+		br
 		input(type='submit')

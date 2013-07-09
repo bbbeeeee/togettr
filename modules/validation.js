@@ -17,3 +17,7 @@ exports.validatePassword = function(password){
 
 	return /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$/.test(password);
 }
+
+exports.checkEmail = function(email){
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}

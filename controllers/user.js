@@ -29,10 +29,8 @@ exports.logout = function(req, res){
 }
 
 exports.signup = function(req, res){
-	mongoClient.open(function(err, mongoclient){
-	  var db = mongoclient.db('youtaan');
 
-	  db.createCollection('users', function(err, collection){
+	  db.collection('users', function(err, collection){
 	  	collection.findOne({email: req.body.email}, function(err, doc){
 	  		console.log(doc);
 	  		if(doc == null){
@@ -44,11 +42,9 @@ exports.signup = function(req, res){
 		 				bcrypt.hash(req.body.password, salt, function(err, hash){
 		 					if(err) {
 		 						console.log(err); 
-		 						mongoClient.close(); 
 		 						res.redirect('/');
 		 					}
-		 					collection.insert({password: hash, email: req.body.email}, function(err, item){});
-		 					mongoClient.close();
+		 					collection.insert({password: hash, email: req.body.email, firstname: req.body.firstname, lastname: req.body.lastname}, function(err, item){});
 		 					res.redirect('/');
 		 					
 		 				});
@@ -56,13 +52,11 @@ exports.signup = function(req, res){
 				
 		 		}
 		 		else if(doc){
-		 			console.log('f niggas' + doc._id);
-		 			mongoClient.close();
 		 			res.redirect('/');
 		 		}
 	 		});	
 	  });
-	});
+
 }
 
 

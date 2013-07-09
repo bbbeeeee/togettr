@@ -34,6 +34,7 @@ app.use(express.session({
     secret: "lol",
     store: new MongoStore({
       url: config.db,
+      maxAge: 900000,
       collection : 'sessions'
     })
   }));
@@ -52,6 +53,7 @@ MongoClient.connect("mongodb://localhost:27017/youtaan", function(err, db){
   //give all controllers access to db
   require('./controllers/index').getDb(db);
   require('./controllers/user').getDb(db);
+  require('./controllers/project').getDb(db);
   //give routes, passport, etc access to db
   require('./config/passport')(passport, config, db);
 

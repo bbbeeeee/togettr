@@ -9,9 +9,11 @@ exports.getDb = function(_db){
 }
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+	if(!req.user) res.render('index', { title: 'Express' });
+	else res.redirect('/home.html');
 }
 
 exports.failed = function(req, res){
 	res.render('failed', { title: 'NONONONONO'});
 }
+

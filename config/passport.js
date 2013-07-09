@@ -19,66 +19,44 @@ var Db = require('mongodb').Db
 var mongoClient = new MongoClient(new Server("localhost", 27017));
 
 
-//pooooooooooop
-
 module.exports = function(passport, config, db) {
-
+ 	_db = db;
 	passport.serializeUser(function(user, done) {
+
     done(null, user._id)
   });
 
-  passport.deserializeUser(function(id, done) {
-    mongoClient.open(function(err, mongoClient){
-    	var db = mongoClient.db('youtaan');
-
-    	db.collection('users').findOne({_id: id}, function(err, doc){
-    		mongoClient.close();
-    		done(err, doc);
-    	});
-    })
-  });
+  passport.deserializeUser(function(user, done){
+  	oid = new ObjectID.createFromHexString(user);
+    _db.collection('users').findOne({_id: oid}, function(err, doc){
+    	done(err, doc._id);
+   	});
+   });
+ 	}
 
 	passport.use(new LocalStrategy(
-	  function(email, password, done) {
-	  	console.log("begin");
-
-	  	mongoClient.open(function(err, mongoClient){
-	  		var db = mongoClient.db('youtaan');
-	  		
-	  		db.collection('users').findOne({email: email}, function(err, doc){
-	  			if(err){
-	  				console.log(err);
-	  				mongoClient.close();
-	  				return done(err);
-	  			}
-	  			else if(!doc){
-	  				console.log("no doc");
-	  				mongoClient.close();
-	  				return done(null, false);
-
-	  			}
-	  			else if(doc){
-	  				bcrypt.compare(password, doc.password, function(err, res){
-	  					if(res == true){
-	  						console.log("yessss");
-	  						mongoClient.close();
-	  						return done(null, doc);
-	  					}
-	  					else{
-	  						console.log("password wrong");
-	  						mongoClient.close();
-	  						return done(null, false);
-	  					}
-	  				});
-	  			}
-	  			mongoClient.close();
-	  			return done(null, doc);
-	  		});
-	  			
-	  	});
-			
-	  }
-	));
+	  function(email, password, done) {	
+	  	_db.collection('users').findOne({email: email}, function(err, doc){
+	  		if(err){
+	 				console.log(err);
+	  			return done(err);
+	  		}
+	 			else if(!doc){
+	 				return done(null, false);
+	  		}
+	  		else if(doc){
+	 				bcrypt.compare(password, doc.password, function(err, res){
+	 					if(res == true){
+  						return done(null, doc);	  					}
+	  				else{
+	  					return done(null, false);
+	  				}
+	  			});
+	  		}
+	 		});
+  			
+		}
+));
 
 /*
   passport.use(new FacebookStrategy({
@@ -91,4 +69,3 @@ module.exports = function(passport, config, db) {
 		}
 	));
 */
-}

@@ -11,18 +11,41 @@
     <body>
     	<div id='sidebar'>
     		<h1>Youtaan</h1>
-        <div class="projects">
-          
-        </div>
+        <a href='#/'>Home</div>
+        <a href='#/new-project'>Submit new Project</a> 
+        <a href='#/new-idea'>New idea</a> 
+        <a href='#/new-task'>New task</a> 
+        <a href='#/new-comment'>New comment</a> 
+        <div id"projects"></div>
 			  <a href="/auth/logout">Logout</a> 	
     	</div>
-      <div id="content">
-        <form action="/delete" method="post">
-          <input type="hidden" name="_method" value="put"/>
-          <input type="submit">
-        </form>
-      </div>
+      <div id="content"></div>
+      <script type='text/template' id='project-page-template'>
+        <div id="project">
+          <div id="projInfo"></div>
+          <div id="updates">
+          
+          </div>
+          <div id="discussion">
 
+          </div>
+          <div id="ideas">
+
+          </div>
+          <div id="tasks">
+
+          </div>
+        </div>      
+      </script>
+      <script type='text/template' id='new-project-template'>
+        <form class='new-project-form'>
+            <input type="text" name='name' placeholder='name'>
+            <input type="text" name='identifier' placeholder='identifier'>
+            <input type="text" name='category' placeholder='category'>
+            <textarea name='idea' placeholder='idea'></textarea>
+            <button type='submit'>Submit</button> 
+        </form>
+      </script>
       <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
   		<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js" type="text/javascript"></script>
   		<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>

@@ -16,8 +16,15 @@ var express = require('express')
   , MongoStore = require('connect-mongo')(express)
   , MongoClient = require('mongodb').MongoClient
   , Server = require('mongodb').Server
-  , mongo = require('./config/mongodb');
+  , mongo = require('./config/mongodb')
+  , stylus = require('stylus');
 
+function compile(str, path) {
+      return stylus(str)
+        .set('filename', path)
+        .set('warn', true)
+        .set('compress', true);
+    }
 
 var app = express();
 // all environments
@@ -29,6 +36,11 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(stylus.middleware({
+        src: __dirname + '/css'
+      , dest: __dirname + '/public'
+      , compile: compile
+    }));
 app.use( express.cookieParser() );
 app.use(express.session({
     secret: "lol",

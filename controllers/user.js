@@ -60,3 +60,6 @@ exports.signup = function(req, res){
 }
 
 
+exports.joinProject = function(req, res){
+	
+}

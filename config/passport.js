@@ -23,13 +23,16 @@ module.exports = function(passport, config, db) {
  	_db = db;
 	passport.serializeUser(function(user, done) {
 
-    done(null, user._id)
+    done(null, user)
   });
 
   passport.deserializeUser(function(user, done){
-  	oid = new ObjectID.createFromHexString(user);
+  	oid = new ObjectID.createFromHexString(user._id);
+
     _db.collection('users').findOne({_id: oid}, function(err, doc){
-    	done(err, doc._id);
+    	delete doc.password
+
+    	done(err, doc);
    	});
    });
  	}
@@ -47,6 +50,7 @@ module.exports = function(passport, config, db) {
 	  		else if(doc){
 	 				bcrypt.compare(password, doc.password, function(err, res){
 	 					if(res == true){
+	 						delete doc.password;
   						return done(null, doc);	  					}
 	  				else{
 	  					return done(null, false);

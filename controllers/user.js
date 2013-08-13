@@ -36,29 +36,37 @@ exports.signup = function(req, res){
 	  		if(doc == null){
 	  			console.log("lol");
 	  			
-		 			bcrypt.genSalt(10, function(err, salt){
-		 				console.log(salt);
-		 				if(err) console.log(err);
-		 				bcrypt.hash(req.body.password, salt, function(err, hash){
-		 					if(err) {
-		 						console.log(err); 
-		 						res.redirect('/');
-		 					}
-		 					collection.insert({password: hash, email: req.body.email, firstname: req.body.firstname, lastname: req.body.lastname}, function(err, item){});
-		 					res.redirect('/');
-		 					
-		 				});
-		 			});
+	 			bcrypt.genSalt(10, function(err, salt){
+	 				console.log(salt);
+	 				if(err) console.log(err);
+	 				bcrypt.hash(req.body.password, salt, function(err, hash){
+	 					if(err) {
+	 						console.log(err); 
+	 						res.redirect('/');
+	 					}
+	 					collection.insert({password: hash, email: req.body.email, firstname: req.body.firstname, lastname: req.body.lastname, projects:[]}, function(err, item){});
+	 					res.redirect('/');
+	 					
+	 				});
+	 			});
 				
-		 		}
-		 		else if(doc){
+	 		}
+		 	else if(doc){
+		 			console.log("NEED TO DO SOMETHING");
 		 			res.redirect('/');
-		 		}
+		 	}
 	 		});	
 	  });
 
 }
 
+exports.getCurrentUser = function(req, res){
+	res.send(req.user);
+}
+
+exports.update = function(req, res){
+
+}
 
 exports.joinProject = function(req, res){
 	

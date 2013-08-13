@@ -19,10 +19,48 @@ exports.getDb = function(_db){
 	db = _db;
 }
 
-exports.comment = function(req, res) {
+exports.addComment = function(req, res) {
+  if(req.user){
+    db.collection('comments', function(err, collection){
+      if(err){
+        console.log(err);
+        res.send('failed');
+      }
+      collection.insert({comment: req.body.comment, project: req.body.projectIdentifier}, 
+        function(err, doc){console.log(doc);res.send(doc);});
+      
+    });
+  }
+  else{
+    res.send("not logged in");
+  }
+}
+
+exports.getAllComments = function(req, res){
+if(req.user){
+    if(req.query){
+      console.log(req.query);
+      db.collection('comments', function(err, collection){
+        collection.find({project: req.query.project}, {limit: 10, skip: req.query.page *10}, function(err, cursor){
+          if(err){
+            res.send('failed')
+          }else{
+            cursor.toArray(function(err, documents){
+              res.json(documents)
+            });
+          }
+        })
+      });
+    }
+    else res.send("lol");
+  }
+  else res.send("not logged in");
+}
+
+exports.getOneComment = function(req, res){
 
 }
 
-exports.deleteComment = function(req, res){
+exports.delComment = function(req, res){
 
 }

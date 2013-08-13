@@ -1,0 +1,156 @@
+border-radius()
+  -webkit-border-radius arguments
+  -moz-border-radius arguments
+  border-radius arguments
+transition()
+	transition arguments
+	-webkit-transition arguments
+//------------------Universals------------
+*
+	margin 0 
+	padding 0 
+	font-family  'Ubuntu', sans-serif 
+	font-weight 300 
+
+body, body > *, #container > *
+	height 100%
+
+a
+	text-decoration none
+	color #000
+
+h1 >* 
+	color #FFF
+
+ul 
+	list-style-type none 
+
+input, textarea 
+	border 2px solid #DEDEDE
+	padding 5px
+	margin 10px 10px 10px 10px
+	font-size 1.3em 
+
+textarea 
+	margin-left 60px 
+
+.title 
+	font-family  'Ubuntu', sans-serif 
+	font-weight 400
+ 
+.textcenter 
+	text-align center 
+
+#sidebar 
+	float left 
+	width 250px 
+	position fixed 
+	overflow auto 
+	background-color #FFD633 
+
+
+#toggleSidebar
+	margin-left 210px
+	margin-top 5px
+	z-index 1
+	color #FEFEFE
+	position absolute
+	&:hover
+		color #DEDEDE
+
+#content 
+	background-color #E4F1F6 
+	margin-left 250px
+	padding-left 50px
+
+#logo 
+	text-align center 
+	margin-bottom 30px 
+
+//----------------Specific Pages---------------
+// Sidebar
+#sidebar nav 
+	width 100% 
+ 
+#sidebar nav ul li, #projectList li 
+	display block 
+ 
+#sidebar nav ul li a, #projectList ul li a
+	font-size 1.3em 
+	padding 10px 5px 
+	padding-left 15px 
+	color #FFF 
+	display block 
+	&:hover
+		background-color #4DA2BF 
+
+#projectList
+	padding-bottom 10px
+	border-bottom 1px solid #FFF
+#pListLabel
+	text-align center
+	color #FFF
+	width 100%
+	border-bottom 1px solid #FFF
+	padding-bottom 10px
+	font-size:1.5em
+		
+// New Project 
+.new-project-form 
+	width 500px 
+	max-width 500px 
+	margin-left auto 
+	margin-right auto 
+
+
+// Single Project
+.projectColumnContainer
+	height 100%
+	float left
+	width 25%
+	padding 0px 20px
+	
+#discussionContainer
+	border-right 1px solid #000
+
+#taskContainer
+	border-left 1px solid #000
+
+// Explore
+#exploreContainer
+	margin-left 30px
+
+.exploreProjectBox
+	display block
+	float left
+	padding 15px 30px
+	background-color #FFF
+	border-radius(5px)
+	border 3px solid #FFD633
+	margin 0px 5px
+	width 300px
+	height 20%
+	h3
+		font-size 1.5em
+		margin-bottom 10px
+	
+	&:hover
+		background-color:#F4F9FB
+
+.join-form
+	float right
+/* Scrollbar */
+
+::-webkit-scrollbar
+	width 15px
+::-webkit-scrollbar
+	background-color #FFE270
+::-webkit-scrollbar-thumb
+	background-color #191919
+	&:hover 
+		background-color:#282828
+::-webkit-scrollbar-button 
+	background-color #D1D1D1
+::-webkit-scrollbar-corner
+	background-color black
+/* end of Scrollbar*/

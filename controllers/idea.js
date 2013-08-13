@@ -40,14 +40,20 @@ exports.getDb = function(_db){
 	db = _db;
 }
 
-exports.create = function(req, res) {
+exports.add = function(req, res) {
   if(req.user){
+    console.log("lol");
     db.collection('ideas', function(err, collection){
+      console.log(req.user);
       if(err){
         console.log(err);
         res.send('failed');
       }
-      collection.insert({idea: req.body.idea});
+      collection.insert({idea: req.body.idea, 
+        project: req.body.projectIdentifier, 
+        creatorId: req.user._id
+        }, 
+        function(err, doc){console.log(doc);res.send(doc);});
       
     });
   }
@@ -77,20 +83,43 @@ exports.del = function(req, res) {
   }
 }
 
-exports.get = function(req, res){
+exports.getOne = function(req, res){
   if(req.user){
-    db.collection('ideas', function(err, collection){
-      collection.findOne({name: req.body.name}, function(err, doc){
-        if(err){
-          res.send('failed')
-        }
-        else if(doc == null){
+    if(req.query){
+      db.collection('ideas', function(err, collection){
+        collection.findOne({}, function(err, doc){
+          if(err){
+            res.send('failed')
+          }
+          else if(doc == null){
 
-        }
-        else if(doc){
-
-        }
-      })
-    })
+          }
+          else if(doc){
+            res.send(doc);
+          }
+        })
+      });
+    }
   }
+}
+
+exports.getAll= function(req, res){
+  if(req.user){
+    if(req.query){
+      console.log(req.query);
+      db.collection('ideas', function(err, collection){
+        collection.find({project: req.query.project}, {limit: 10, skip: req.query.page *10}, function(err, cursor){
+          if(err){
+            res.send('failed')
+          }else{
+            cursor.toArray(function(err, documents){
+              res.json(documents)
+            });
+          }
+        })
+      });
+    }
+    else res.send("lol");
+  }
+  else res.send("not logged in");
 }

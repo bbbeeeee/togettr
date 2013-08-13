@@ -22,43 +22,63 @@ exports.getDb = function(_db){
 exports.add = function(req, res) {
   if(req.user){
     db.collection('tasks', function(err, collection){
-      collection.findOne({name: req.body.task}, function(err, doc){
-        if(err){
+      if(err){
+        console.log(err);
+        res.send('failed');
+      }
+      collection.insert({task: req.body.task, project: req.body.projectIdentifier}, 
+        function(err, doc){console.log(doc);res.send(doc);});
+      
+    });
+  }
+  else{
+    res.send("not logged in");
+  }
+}
 
-        }
-        else if(doc == null){
+exports.getOne= function(req, res){
 
-        }
-        else if(doc){
-          
-        }
-      })
-    })
+}
+
+exports.getAll = function(req, res){
+  if(req.user){
+    if(req.query){
+      console.log(req.query);
+      db.collection('tasks', function(err, collection){
+        collection.find({project: req.query.project}, {limit: 10, skip: req.query.page *10}, function(err, cursor){
+          if(err){
+            res.send('failed')
+          }else{
+            cursor.toArray(function(err, documents){
+              res.json(documents)
+            });
+          }
+        })
+      });
+    }
+    else res.send("lol");
+  }
+  else res.send("not logged in");
+}
+
+
+exports.del = function(req, res) {
+  if(req.user){
+    db.collection('tasks', function(err, col){
+      col.remove({_id: ObjectID(req.query._id)}, {w: 1, single: true}, function(err, num){
+        assert.equal(null, err);
+        assert.equal(1, num);
+        res.send(undefined);
+      });
+    });
   }
   else{
     res.redirect('/');
   }
 }
 
-exports.del = function(req, res) {
-  if(req.user){
-    db.collection('tasks', function(err, collection){
-      collection.findOne({name: req.body.task}, function(err, doc){
-        if(err){
+exports.update = function(req, res){
 
-        }
-        else if(doc == null){
-
-        }
-        else if(doc){
-          
-        }
-      })
-    })
-  }
-  else{
-    res.redirect('/');
-  }
 }
 
 exports.finish = function(req, res){

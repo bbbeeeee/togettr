@@ -1,7 +1,59 @@
-function htmlEncode(value){
-  return $('<div/>').text(value).html();
-}
-
+requirejs.config({
+  baseUrl: '../js',
+  paths: {
+    "jquery": [
+      "//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min",
+      "vendor/jquery/jquery.min"
+    ],
+    "underscore": [
+      "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min",
+      "vendor/backbone/backbone.min"
+    ],
+    "backbone": [
+      "//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min",
+      "vendor/backbone/backbone.min"
+    ]
+  }
+});
+require([
+  'models/comment', 
+  'models/idea', 
+  'models/project', 
+  'models/task', 
+  'models/user',
+  'collections/comments',
+  'collections/ideas',
+  'collections/projects',
+  'collections/tasks',
+  'collections/users',
+  'views/explore',
+  'views/home',
+  'views/newproject',
+  'views/projectpage',
+  'views/projectlist',
+  'util/template'
+  ],
+  function(
+    Comment,
+    Idea,
+    Project,
+    Task,
+    User,
+    Comments,
+    Ideas,
+    Projects,
+    Tasks,
+    Users,
+    ExploreView,
+    HomeView,
+    NewProjectView,
+    ProjectPageView,
+    ProjectListView,
+    Templ) 
+  {
+//var template = new templ();
+//var strings = new Strings();
+window.template = new Templ();
 $.fn.serializeObject = function() {
       var o = {};
       var a = this.serializeArray();
@@ -17,147 +69,105 @@ $.fn.serializeObject = function() {
       });
       return o;
     };
-
 $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-      options.url = 'http://localhost:3000' + options.url;
-    });
-
-
-/* How this is all gonna work
-Projects will hold the models:
-  Project (project info)
-  Idea (idea with info)
-  Comment (comment with info)
-  Task (task with info)
-  and aggregate them based on the Project identifier (project-identifier)
-*/
-
-
-
-
-
-var Project = Backbone.Model.extend({
-  idAttribute: "_id",
-  urlRoot: '/api/project'
+  options.url = 'http://localhost:3000' + options.url;
 });
 
-var Idea = Backbone.Model.extend({
-  idAttribute: "_id",
-  urlRoot: '/api/idea'
-});
+var sidebarVisible = true;
 
-var Comment = Backbone.Model.extend({
-  idAttribute: "_id",
-  urlRoot: '/api/comment'
-});
-
-var Task = Backbone.Model.extend({
-  idAttribute: "_id",
-  urlRoot: '/api/task'
-});
-
-var Projects = Backbone.Collection.extend({
-  model: Project,
-  url: '/api/project'
-});
-
-
-var pro = new Project();
-var search_params = {
-  name: 'a'
-}
-var x = pro.fetch({data: $.param(search_params)});
-console.log(x);
-var NewProjectView = Backbone.View.extend({
-  el: '#content',
-  events: {
-    'submit .new-project-form': 'submitProject'
-  },
-  submitProject: function(ev){
-    var projectDetails = $(ev.currentTarget).serializeObject();
+$('#toggleSidebar').click(function(){
+  if(sidebarVisible == true){
+    sidebarVisible = false;
+    $('#sidebar').animate({
+      left: "-=250"
+    },300);
+    $('#toggleSidebar').animate({
+      left: "-=200"
+    },300);
+    $('#content').animate({
+      marginLeft: "-=250"
+    }, 300);
     
-    console.log(projectDetails);
-    project.save(projectDetails, {
-      success: function(project, res, options){
-        console.log(res[0]);
-        Projects.add(res);
-        router.navigate('', {trigger: true});
-      },
-      error: function(model, xhr, options){
-        console.log('sss');
-        if(xhr.responseText == "failed" || xhr.responseText == "not logged in")
-         window.location.href = "http://localhost:3000";
-
-      }
-    });
-    return false;
-  },
-  render: function() {
-    
-    var template = _.template($('#new-project-template').html(), {});
-    this.$el.html(template);
-  }
-});
-
-var ProjectPageView = Backbone.View.extend({
-  el: '#content',
-  events: {
-    'submit .new-task-form': 'newTask',
-    'submit .new-idea-form': 'newIdea',
-    'submit .new-comment-form': 'newComment',
-
-  },
-  render: function(options) {
-
-    var template = _.template($('#project-page-template').html(), {identifier: options.identifier});
-    this.$el.html(template);
-  },
-  newTask: function(){
-
-  },
-  newIdea: function(){
-
-  },
-  newComment: function(){
-
-  }
-});
-
-var ExploreView = Backbone.View.extend({
-  el: '#content',
-  events: {
-
-  },
-  render: function() {
-    var ssearch_params = {
-      name: 'a'
-    }
-    var that = this;
-    projects.fetch({
-      success: function(pprojects){
-        console.log(pprojects);
-        var template = _.template($('#explore-template').html(), {projects: pprojects.models});
-        that.$el.html(template);
-      }
-    });
+  }else{
+    sidebarVisible = true;
+    $('#sidebar').animate({
+      left: "+=250",
+    }, 300);
+    $('#toggleSidebar').animate({
+        left: "+=200",
+      }, 300);
+    $('#content').animate({
+      marginLeft: "+=250"
+    }, 300);
     
   }
 });
 
 // Collections
-var projects = new Projects();
 
-// Models
-var project = new Project();
-var idea = new Idea();
-var task = new Task();
-var comment = new Comment();
+window.projects = new Projects();
+window.ideas = new Ideas();
+window.comments = new Comments();
+window.tasks = new Tasks();
+window.users = new Users();
+
+users.fetch({data: $.param({currentUser: true}), 
+  success: function(uuser){
+    window.currentUser = uuser.models[0];
+  }
+}); 
+
+
+
+window.projects.fetch();
+console.log(window.projects)
+
+
+function getUserProjects(){
+   window.users.fetch({data: $.param({currentUser: true}), 
+      success: function(uuser){
+        window.projects.fetch();
+        currentUser = uuser.models[0];
+        console.log(currentUser.attributes.projects);
+        console.log(projects);
+        _projects = currentUser.attributes.projects;
+        var _userProjects = [];
+        //need logic to test if already queried for projects
+        
+        for(var i = 0; i < _projects.length; i++){
+          var x = window.projects.get({id: _projects[i]});
+          console.log(_projects[i]);
+          console.log(window.projects)
+          window.projects.fetch({data: $.param({_id: _projects[i]}),
+            success: function(_theProject, response, options){
+              //_userProjects[i] = projects.where({_id: _projects[i]}); 
+              console.log(_theProject.models[0].attributes.name);
+              $('#projectList').append('<li><a href="#/project/' +
+                _theProject.models[0].attributes.identifier + '">' + 
+                _theProject.models[0].attributes.name + '</a></li>'); 
+          }
+        });
+
+        }
+        console.log("hahah");
+        //window.template.fillTemplate(that, '#user-project-list-template', {userProjects: _userProjects});
+          
+      }
+        
+    });
+}
+
+getUserProjects();
+
+
+
 
 // Views
+var homeView = new HomeView();
 var newProjectView = new NewProjectView();
 var projectPageView = new ProjectPageView();
 var exploreView = new ExploreView();
-
+var projectListView = new ProjectListView();
 var Router = Backbone.Router.extend({
   routes: {
     '': 'home',
@@ -167,18 +177,19 @@ var Router = Backbone.Router.extend({
     'new-project': 'newproject'
   },
   home: function(){
-    $('#content').html("fdgasdfgadf");
+    //projectListView.render();
+    homeView.render();
+
   },
   explore: function(){
     exploreView.render();
   },
   exploreMore: function(queryString){
-    var searchString = $.QueryString["searchString"] ? $.QueryString["searchString"] : "";
-    var page = ($.QueryString["page"]) ? $.QueryString["page"] : 1;
+    var searchString = $.QueryString.searchString ? $.QueryString.searchString : "";
+    var page = ($.QueryString.page) ? $.QueryString.page : 1;
     console.log(page);
   },
   project: function(identifier){
-    console.log("KASJLDAS");
     projectPageView.render({identifier: identifier});
   },
   newproject: function(){
@@ -186,32 +197,10 @@ var Router = Backbone.Router.extend({
   }
 });
 
-var router = new Router;
-/*
-router.on('route:home', function(){
-  $('#content').html("<label>Search</label>");
-});
-
-router.on('route:explore', function(){
-    exploreView.render();
-});
-
-router.on('route:exploreMore', function(queryString){
-  var searchString = $.QueryString["searchString"] ? $.QueryString["searchString"] : "";
-  var page = ($.QueryString["page"]) ? $.QueryString["page"] : 1;
-  console.log(page);
-
-})
-router.on('project', function(identifier){
-  console.log("KASJLDAS");
-  projectPageView.render({identifier: id});
-});
-
-router.on('route:new-project', function(){
-  newProjectView.render();
-});
-*/
-
+window.router = new Router();
 
 
 Backbone.history.start();
+
+
+});

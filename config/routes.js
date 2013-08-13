@@ -12,8 +12,11 @@ God gave people two eyes, two ears, and one mouth﻿ so they can look and listen
 I need updates to be aggregate of all updates in project
 */
 var mongoose = require('mongoose')
-	, user = require('../controllers/user.js')
-	, project = require('../controllers/project.js')
+	, user = require('../controllers/user')
+	, project = require('../controllers/project')
+  , discussion = require('../controllers/discussion')
+  , task = require('../controllers/task')
+  , idea = require('../controllers/idea.js')
 	, controllers = require('../controllers');
 module.exports = function(app, passport, db){
 	
@@ -32,7 +35,7 @@ module.exports = function(app, passport, db){
 	})
   app.post('/auth/signup', user.signup);
 
-  app.post('/join/project/:id', user.joinProject);
+
 
 /*
   app.get('/projects', project.projects);
@@ -50,30 +53,33 @@ module.exports = function(app, passport, db){
   app.post('/project/:id/idea', idea.add);
   app.del('/project/:id/idea', idea.del);
 */
+  app.get('/api/user', user.getCurrentUser);
+  app.put('/api/user/:id', user.update);
+  
   app.post('/api/project', project.create);
   app.get('/api/project/:id', project.get);
   app.get('/api/project', project.get); //search
   app.del('/api/project/:id', project.del);
   app.put('/api/project/:id', project.update);
+  app.put('/api/project/:id/join', project.join);
 
-/*
-  app.post('/api/idea', idea.create);
-  app.get('/api/idea/:id', idea.get);
+  app.post('/api/idea', idea.add);
+  app.get('/api/idea', idea.getAll);
+  app.get('/api/idea/:id', idea.getOne);
   app.del('/api/idea/:id', idea.del);
   //app.put('/api/idea/:id', idea.update);
 
-/*
-  app.get('/api/comment', discussion.getComments);
-  app.get('/api/comment/:id', discussion.getComment);
-  app.post('/api/comment', discussion.newComment);
+  app.post('/api/comment', discussion.addComment);
+  app.get('/api/comment', discussion.getAllComments);
+  app.get('/api/comment/:id', discussion.getOneComment);
   app.del('/api/comment/:id', discussion.delComment);
 
   app.post('/api/task', task.add);
-  app.get('/api/task/:id', task.getSingle);
   app.get('/api/task', task.getAll);
+  app.get('/api/task/:id', task.getOne);
   app.del('/api/task/:id', task.del);
   app.put('/api/task/:id', task.update);
-*/
+
 
   /* API Maybe?
   You can create, read, update, or delete

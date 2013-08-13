@@ -16,6 +16,7 @@
     "passport-facebook": "0.1.5",
     "underscore": "1.4.4",
     "stylus": "0.34.1",
-    "bson": "0.1.8"
+    "bson": "0.1.8",
+    "jquery": "1.8.3"
   }
 }

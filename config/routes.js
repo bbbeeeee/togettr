@@ -17,6 +17,7 @@ var mongoose = require('mongoose')
   , discussion = require('../controllers/discussion')
   , task = require('../controllers/task')
   , idea = require('../controllers/idea.js')
+  , contribution = require('../controllers/contribution.js')
 	, controllers = require('../controllers');
 module.exports = function(app, passport, db){
 	
@@ -35,90 +36,34 @@ module.exports = function(app, passport, db){
 	})
   app.post('/auth/signup', user.signup);
 
-
-
-/*
-  app.get('/projects', project.projects);
-  app.get('/projects/more', project.moreProjects); //More (JSON response)
-  app.get('/project/:id', project.project);
-  app.post('/open/project', project.open);
-
-  
-/*
-  app.post('/project/:id/comment', discussion.comment);
-  app.del('/project/:id/comment/:id', discussion.deleteComment);
-  app.post('/project/:id/task', task.add);
-  app.del('/project/:id/task', task.del);
-  app.put('/project/:id/finishtask', task.finish);
-  app.post('/project/:id/idea', idea.add);
-  app.del('/project/:id/idea', idea.del);
-*/
-  app.get('/api/user', user.getCurrentUser);
+  app.get('/api/user', user.getUser);
   app.put('/api/user/:id', user.update);
   
   app.post('/api/project', project.create);
   app.get('/api/project/:id', project.get);
-  app.get('/api/project', project.get); //search
+  app.get('/api/project', project.get); 
   app.del('/api/project/:id', project.del);
   app.put('/api/project/:id', project.update);
-  app.put('/api/project/:id/join', project.join);
 
   app.post('/api/idea', idea.add);
   app.get('/api/idea', idea.getAll);
   app.get('/api/idea/:id', idea.getOne);
   app.del('/api/idea/:id', idea.del);
-  //app.put('/api/idea/:id', idea.update);
 
-  app.post('/api/comment', discussion.addComment);
-  app.get('/api/comment', discussion.getAllComments);
-  app.get('/api/comment/:id', discussion.getOneComment);
-  app.del('/api/comment/:id', discussion.delComment);
+  app.post('/api/discussion', discussion.addComment);
+  app.get('/api/discussion', discussion.getAllComments);
+  app.get('/api/discussion/:id', discussion.getOneComment);
+  app.del('/api/discussion/:id', discussion.delComment);
+
+  app.post('/api/contribution', contribution.add);
+  app.get('/api/contribution', contribution.getAll);
+  app.get('/api/contribution/:id', contribution.getOne);
+  app.del('/api/contribution/:id', contribution.del);
 
   app.post('/api/task', task.add);
   app.get('/api/task', task.getAll);
   app.get('/api/task/:id', task.getOne);
   app.del('/api/task/:id', task.del);
   app.put('/api/task/:id', task.update);
-
-
-  /* API Maybe?
-  You can create, read, update, or delete
-		Project (gets all tasks, ideas, and discussion/updates, and members)
-		Task
-		Idea
-		
-
-		Members can be added to projects, tasks
-
-		All project, task, idea are going to be attributed to a creator (member)
-
-  
-   
-  app.post('/api/project', project.create);
-  app.get('/api/project/:id', project.get);
-  app.del('/api/project/:id', project.del);
-
-
-  app.post('/api/task', task.create);
-  app.get('/api/task/:id', task.get);
-  app.del('/api/task/:id', task.del);
-  app.put('/api/task/:id', task.update);
-
-  app.post('/api/idea', idea.create);
-  app.get('/api/idea/:id', idea.get);
-  app.del('/api/idea/:id', idea.del);
-  app.put('/api/idea/:id', idea.update);
-
-  app.get('/api/project/:id/members', project.getProjectMembers);
-  app.get('/api/project/:id/members/:memberID', project.getMember);
-
-  //When someone joins a project, they will be added to it
-
-
-  //users
-  app.put('/project/:id/join', user.joinProject);
-  app.get('/user/:id', user.getUser);
-	*/
-
 
 }

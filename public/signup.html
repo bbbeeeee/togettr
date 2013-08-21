@@ -1,0 +1,49 @@
+<form action='/auth/signup' method='post' class='frontPageForm' id='signUpForm'>
+    <input type="text" maxlength='25' name='firstname' placeholder='first name'>
+    <input type="text" maxlength='40' name='lastname' placeholder='last name'>
+    <input type='text' maxlength='200' name='email' placeholder='email' id='email'>
+    <input id='password' type="password" maxlength='200' name='password' placeholder='password'>
+    <input id='rpassword' type="password" maxlength='200' name='rpassword' placeholder='repeat password'>
+    <label class='errorPassword' style='display:none; '>Passwords do not match</label>
+    <input id='suSubmit' type="submit" value='Sign up!'>
+</form>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js" type="text/javascript"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
+        <script src='./js/util/validation.js'></script>
+<script>
+	$('#signUpForm > input').keyup(function(){
+	        	$('#signUpForm > input').each(function(){
+	        			
+	        			if($(this).val() == ''){
+	        				$(this).css('border', '1px solid #99CCFF');
+	        				return false;
+	        			}
+	        			else{
+	        				$(this).css('border', '1px solid #DEDEDE');
+	        			}
+	        			
+
+	        	});
+        	});
+
+        	$('#signUpForm').on('submit', function(){
+        		if(validate.email($('#email').val()) == false){
+        			console.log("alkjflaj");
+        			return false;
+        		}
+        		else if($('#rpassword').val() != $('#password').val()){
+	        		$('.errorPassword').show();
+	        		console.log("lolsadas");
+	        		return false;
+	        	}
+	        	else if($('#password').val() == ''){
+	        		console.log("asdadjlskajdaslsjadjas");
+	        		$('.errorPassword').show();
+	        		$('.errorPassword').text("Please enter a password");
+	        		return false;
+	        	}
+	        	else{
+	        		return true;
+	        	}
+</script>

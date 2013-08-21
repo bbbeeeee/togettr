@@ -1,18 +1,22 @@
 define(['collections/comments',
+        'collections/contributions',
 				'collections/ideas',
 				'collections/projects',
 				'collections/tasks',
 				'collections/users',
 				'models/comment',
+        'models/contribution',
 				'models/idea',
 				'models/task'], 
 			function(
 				Comments,
+        Contributions,
 				Ideas,
 				Projects,
 				Tasks,
 				Users,
 				Comment,
+        Contribution,
 				Idea,
 				Task){
 	var ProjectPageView = Backbone.View.extend({
@@ -20,8 +24,11 @@ define(['collections/comments',
   events: {
     'submit .new-task-form': 'newTask',
     'submit .new-idea-form': 'newIdea',
-    'submit .new-comment-form': 'newComment',
-    'submit .join-form': 'join'
+    //'submit .new-comment-form': 'newComment',
+    'submit .new-contribution-form': 'newContribution',
+    'submit .join-form': 'join',
+    'click .more': 'more',
+    'click .deletable': 'delete' 
   },
   render: function(options) {
   	var projects = new Projects();
@@ -36,32 +43,51 @@ define(['collections/comments',
 		  }
 		}); 
     var pid = options.identifier;
-
+    this.pid=options.identifier;
     var _ideas, _tasks, _comments;
     var that = this;
+    console.log(pid);
+    console.log(window.projects);
 
-
+    //maybe add later: only fetch again if do not already have in there
+    /*
+    if(window.projects.where({identifier: pid})[0] && window.contributions.where({project: pid}) != []){
+      console.log(window.contributions.where({project: pid}));
+      console.log(window.contributions)
+      window.projects.fetch({data: $.param({identifier:pid}),
+        success: function(){
+          template.fillTemplate(that, '#project-page-template', {
+            Project: window.projects.where({identifier: pid})[0],
+            identifier: pid,
+            currentUser: currentUser,
+            ideas: window.ideas.where({project: pid}),
+            tasks: window.tasks.where({project: pid}),
+            contributions: window.contributions.where({project: pid})
+          });
+      }});
+    */
     window.ideas.fetch
-    ({data: $.param({project: pid, page: 0}),
+    ({remove: false, data: $.param({project: pid, page: 0}),
       success: function(ideaCollection, response, options){
-        window.tasks.fetch({data: $.param({project: pid, page: 0}),
+        console.log(window.ideas);
+        window.tasks.fetch({remove: false, data: $.param({project: pid, page: 0}),
           success: function(taskCollection, response, options){
-            window.comments.fetch({data: $.param({project: pid, page: 0}),
-              success: function(commentCollection, response, options){
-
+            window.contributions.fetch({remove: false, data: $.param({project: pid, page: 0}),
+              success: function(contributionCollection, response, options){
                 var theProject = window.projects.where({identifier: pid})[0];
                 if(theProject === undefined){
-                  window.projects.fetch({data: $.param({identifier:pid}),
+                  window.projects.fetch({remove: false, data: $.param({identifier:pid}),
                     success: function(_theProject, response, options){
                       theProject = window.projects.where({identifier: pid})[0];
                       console.log(theProject);
+                      console.log(contributionCollection);
                       template.fillTemplate(that, '#project-page-template', {
                         Project: theProject,
                         identifier: pid,
                         currentUser: currentUser,
                         ideas: ideaCollection.models,
                         tasks: taskCollection.models,
-                        comments: commentCollection.models
+                        contributions: contributionCollection.models
                       });
                     }});
 
@@ -73,7 +99,7 @@ define(['collections/comments',
                     currentUser: currentUser,
                     ideas: ideaCollection.models,
                     tasks: taskCollection.models,
-                    comments: commentCollection.models
+                    contributions: contributionCollection.models
                   });
                 }
             }
@@ -87,14 +113,23 @@ define(['collections/comments',
         console.log(collection);
         if(xhr.responseText == "failed" || xhr.responseText == "not logged in")
          window.location.href = "http://localhost:3000";
-      }}); 
+      }});
+    
   },
   newTask: function(ev){
     var details = $(ev.currentTarget).serializeObject();
+    if(details.task != ""){
     var newTask = new Task(); 
     newTask.save(details, {
       success: function(task, res, options){
-        $('#tasks').append('<li>' + task.get("task") + '</li>');
+        if(res[0].creator == window.currentUser.attributes._id){
+          console.log(window.currentUser.attributes._id);
+          $('#tasks').prepend('<li>' + task.get("task") + 
+            '<i id="' + res[0]._id + '" class="icon-trash deletable"></i></li>');
+        }
+        else{ 
+          $('#tasks').prepend('<li>' + task.get("task") + '</li>');
+        }
         $('.newTask').val("");
       },
       error: function(model, xhr, options){
@@ -104,14 +139,24 @@ define(['collections/comments',
       }
     });
     return false;
+    }
+    else return false;
   },
   newIdea: function(ev){
     var details = $(ev.currentTarget).serializeObject();
+    if(details.idea != ""){
     var newIdea = new Idea();
     newIdea.save(details, {
       success: function(idea, res, options){
       	console.log(idea);
-        $('#ideas').append('<li>' + idea.get("idea") + '</li>');
+        if(res[0].creator == window.currentUser.attributes._id){
+          $('#ideas').prepend('<li>' + idea.get("idea")  + 
+            '<i id="' + res[0]._id + '" class="icon-trash deletable"></i></li>');
+        
+        }
+        else{ 
+          $('#ideas').prepend('<li>' + idea.get("idea") + '</li>');
+        }
         $('.newIdea').val("");
       },
       error: function(model, xhr, options){
@@ -121,8 +166,10 @@ define(['collections/comments',
       }
     });
     return false;
+    }
+    else return false;
   },
-  newComment: function(ev){
+  /*newComment: function(ev){
     var details = $(ev.currentTarget).serializeObject();
     var newComment = new Comment();
     newComment.save(details, {
@@ -137,18 +184,49 @@ define(['collections/comments',
       }
     });
     return false;
+  },*/
+  newContribution: function(ev){
+    var details = $(ev.currentTarget).serializeObject();
+    if(details.contribution != ""){
+      $('.newContribution').val("");
+    var newContribution = new Contribution();
+    newContribution.save(details, {
+      success: function(contribution, res, options){
+        if(res[0].creator == window.currentUser.attributes._id){
+          console.log(res);
+          $('#contributions').prepend('<li>' + contribution.get("contribution")  + 
+            '<i id="' + res[0]._id + '" class="icon-trash deletable"></i></li>');
+          $('.newContribution').val("");
+        }
+        else{ 
+          $('#contributions').append('<li>' + contribution.get("contribution") + '</li>');
+        }
+        $('.newContribution').val("");
+      },
+      error: function(model, xhr, options){
+      console.log('error: ' + xhr.responseText);
+      if(xhr.responseText == "failed" || xhr.responseText == "not logged in")
+        window.location.href = "http://localhost:3000";
+      }
+    });
+    return false;
+    }
+    else return false;
   },
   join: function(ev){
     var details = $(ev.currentTarget).serializeObject();
     updatedProject = window.projects.where({_id: details.projectId})[0];
     console.log(window.projects);
+    //should not happen because members is already initiated in creation of user
     if(typeof updatedProject.attributes.members == 'undefined'){
       //updatedProject.attributes.members = [details.userId];
       updatedProject.save({members: [details.userId], updateType: "join", projectId: details.projectId}, {
         success: function(project, res, options){
+          //$('projectList').append('<li>' + project.attributes.name + '</li>');
           users.fetch({data: $.param({currentUser: true}), 
-            success: function(uuser){
+            success: function(uuser, res, options){
               currentUser = uuser.models[0];
+              //$('projectList').append('<li>' + project.attributes.name + '</li>');
             }
           }); 
           window.router.navigate('', {trigger: true});
@@ -165,11 +243,14 @@ define(['collections/comments',
       var x = updatedProject.attributes.members;
       updatedProject.save({members: x, updateType: "join", projectId: details.projectId}, {
         success: function(project, res, options){
-          users.fetch({data: $.param({currentUser: true}), 
+          window.users.fetch({data: $.param({currentUser: true}), 
             success: function(uuser){
               currentUser = uuser.models[0];
             }
           }); 
+          $('#projectList').append('<li><a href="#/project/' +
+                project.attributes.identifier + '">' + 
+                project.attributes.name + '</a></li>'); 
           window.router.navigate('', {trigger: true});
         },
         error: function(model, xhr, options){
@@ -184,8 +265,202 @@ define(['collections/comments',
 			return false;
     }
     console.log(updatedProject);
-    //sync updated project, add to project list of user with userId --- all in project.join
     return false;
+  },
+  more: function(ev){
+    console.log(ev.currentTarget.name);
+    
+    switch (ev.currentTarget.name)
+    {
+      case "contributions":
+        var page = $('#contributions > li').length / 10;
+        page = Math.ceil(page);
+        window.contributions.fetch({data: $.param({project: this.pid, page: page}),
+          success: function(items, res, options){
+            if(items.length != 0){
+              _.each(items.models, function(item){
+                if(item.attributes.creator == window.currentUser.attributes._id){
+
+                  $('#contributions').append('<li>' + item.get("contribution")  + 
+                  '<i id="' + item.attributes._id + '" class="icon-trash deletable"></i></li>');
+
+                }
+                else{
+                  $('#contributions').append('<li>' + item.get("contribution")  + 
+                  '</li>');
+                }
+              });
+            }
+            else console.log("no more");
+          }});
+        console.log(page);
+        break;
+      case "ideas":
+        var page = $('#ideas > li').length / 10;
+        page = Math.ceil(page);
+        window.ideas.fetch({data: $.param({project: this.pid, page: page}),
+          success: function(items, res, options){
+            if(items.length != 0){
+              _.each(items.models, function(item){
+                if(item.attributes.creator == window.currentUser.attributes._id){
+                  $('#ideas').append('<li>' + item.get("idea")  + 
+                  '<i id="' + item.attributes._id + '" class="icon-trash deletable"></i></li>');
+                }
+                else{
+                  $('#ideas').append('<li>' + item.get("idea")  + 
+                  '</li>');
+                }
+              });
+            }
+            else console.log("no more");
+          }});
+        console.log(page);
+        break;
+      case "tasks":
+        var page = $('#tasks > li').length / 10;
+        page = Math.ceil(page);
+        window.tasks.fetch({data: $.param({project: this.pid, page: page}),
+          success: function(items, res, options){
+            if(items.length != 0){
+              _.each(items.models, function(item){
+                if(item.attributes.creator == window.currentUser.attributes._id){
+                  $('#ideas').append('<li>' + item.get("tasks")  + 
+                  '<i id="' + item.attributes._id + '" class="icon-trash deletable"></i></li>');
+                }
+                else{
+                  $('#ideas').append('<li>' + item.get("tasks")  + 
+                  '</li>');
+                }
+              });
+            }
+            else console.log("no more");
+          }});
+        console.log(page);
+        break;
+    }
+  },
+  delete: function(ev){
+    console.log(ev.currentTarget);
+    var name = ev.currentTarget.id;
+    var x = $('i[id="' + name + '"]').parent().parent().attr('id');
+    switch (x)
+    {
+      case "contributions":
+
+        console.log(window.contributions);
+        var g = window.contributions.where({_id: ev.currentTarget.id})[0];
+        console.log(g);
+        if(g == undefined){
+          window.contributions.fetch({data: $.param({_id: ev.currentTarget.id}),
+            success: function(collection, res, options){
+              console.log("hahassssh");
+              var g = window.contributions.where({_id: ev.currentTarget.id})[0];
+              g.destroy({
+                success: function(model, response, options){
+                  console.log(model);
+                  $('i[id="' + name + '"]').parent().remove();
+                },
+                error: function(model, xhr, options){
+                  console.log(xhr);
+                }
+              });
+            },
+            error: function(collection, response, options){
+              console.log("hahah");
+            }
+          });
+        }
+        else{
+          g.destroy({
+          success: function(model, response, options){
+            console.log(model);
+            $('i[id="' + name + '"]').parent().remove();
+          },
+          error: function(model, xhr, options){
+            console.log(xhr);
+          }
+        });
+        }
+        console.log(g)
+        break;
+      case "ideas":
+        console.log(window.ideas);
+        var g = window.ideas.where({_id: ev.currentTarget.id})[0];
+        console.log(g);
+        if(g == undefined){
+          console.log("1");
+          window.ideas.fetch({data: $.param({_id: ev.currentTarget.id}),
+            success: function(collection, res, options){
+              console.log("hahassssh");
+              var g = window.ideas.where({_id: ev.currentTarget.id})[0];
+              g.destroy({
+                success: function(model, response, options){
+                  console.log(model);
+                  $('i[id="' + name + '"]').parent().remove();
+                },
+                error: function(model, xhr, options){
+                  console.log(xhr);
+                }
+              });
+            },
+            error: function(collection, response, options){
+              console.log("hahah");
+            }
+          })
+        }
+        else{
+          console.log("2");
+          g.destroy({
+          success: function(model, response, options){
+            console.log(model);
+            $('i[id="' + name + '"]').parent().remove();
+            
+          },
+          error: function(model, xhr, options){
+            console.log(xhr);
+          }
+        });
+        }
+        console.log(g)
+        break;
+      case "tasks":
+        console.log(window.tasks);
+        var g = window.tasks.where({_id: ev.currentTarget.id})[0];
+        console.log(g);
+        if(g == undefined){
+          window.tasks.fetch({data: $.param({_id: ev.currentTarget.id}),
+            success: function(collection, res, options){
+              console.log("hahassssh");
+              var g = window.tasks.where({_id: ev.currentTarget.id})[0];
+              g.destroy({
+                success: function(model, response, options){
+                  console.log(model);
+                  $('i[id="' + name + '"]').parent().remove();
+                },
+                error: function(model, xhr, options){
+                  console.log(xhr);
+                }
+              });
+            },
+            error: function(collection, response, options){
+              console.log("hahah");
+            }
+          })
+        }
+        else{
+          g.destroy({
+          success: function(model, response, options){
+            console.log(model);
+            $('i[id="' + name + '"]').parent().remove();
+          },
+          error: function(model, xhr, options){
+            console.log(xhr);
+          }
+        });
+        }
+        console.log(g)
+        break;
+    }
   }
 	});
 	return ProjectPageView;

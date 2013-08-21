@@ -7,4 +7,4 @@ define([], function(Users, Projects, TemplUtil){
 	  }
 	});
 	return HomeView;
-})
+});

@@ -21,12 +21,14 @@ exports.getDb = function(_db){
 
 exports.addComment = function(req, res) {
   if(req.user){
-    db.collection('comments', function(err, collection){
+    db.collection('discussion', function(err, collection){
       if(err){
         console.log(err);
         res.send('failed');
       }
-      collection.insert({comment: req.body.comment, project: req.body.projectIdentifier}, 
+      collection.insert({comment: req.body.comment, 
+        creator: ObjectID(req.user._id.toString()),
+        dateCreated: new Date()},
         function(err, doc){console.log(doc);res.send(doc);});
       
     });
@@ -40,8 +42,9 @@ exports.getAllComments = function(req, res){
 if(req.user){
     if(req.query){
       console.log(req.query);
-      db.collection('comments', function(err, collection){
-        collection.find({project: req.query.project}, {limit: 10, skip: req.query.page *10}, function(err, cursor){
+      db.collection('discussion', function(err, collection){
+        collection.find({project: req.query.project}, 
+          {limit: 10, skip: req.query.page *10, sort:[['dateCreated', -1]]}, function(err, cursor){
           if(err){
             res.send('failed')
           }else{

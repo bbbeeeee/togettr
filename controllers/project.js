@@ -55,8 +55,8 @@ exports.get = function(req, res){
 						console.log(req.query._id);
 						collection.find({_id: ObjectID(req.query._id.toString())}, {limit: 1}, function(err, cursor){
 							cursor.toArray(function(err, documents){
-								console.log("lol");
-								console.log(documents);
+								//console.log("lol");
+								//console.log(documents);
 								res.json(documents);
 							});
 						});
@@ -64,8 +64,8 @@ exports.get = function(req, res){
 					else{
 						collection.find(req.query, {limit: limit}, function(err, cursor){
 						cursor.toArray(function(err, documents){
-							console.log("lols");
-							console.log(documents);
+							//console.log("lols");
+							//console.log(documents);
 							res.json(documents);
 						});
 						});
@@ -160,36 +160,8 @@ exports.update = function(req, res){
 						console.log("lo");
 						console.log(doc.members);
 						if(!doc.members){
-							/*
-								collection.findAndModify(doc, [['_id','asc']], {$set: {members: [ObjectID(req.user._id.toString())]}}, {new: true}, function(err, record){
-									userCollection.findOne({_id: req.user._id}, function(err, userDoc){
-										if(typeof userDoc.projects == 'undefined'){
-											userCollection.findAndModify({_id: ObjectID(userDoc._id.toString())}, 
-												[['_id','asc']], {$set: {projects: [ObjectID(req.body.projectId.toString())]}}, 
-												{new: true}, 
-												function(err, record){
-												res.send(record);
-											});
-										}
-										else if(typeof userDoc.projects != 'undefined' && _.indexOf(userDoc.projects, req.body.projectId) == -1){
-											console.log("2nd");
-											userDoc.projects.push(ObjectID(req.body.projectId));
-											var newProjects = userDoc.projects;
-											userCollection.findAndModify({_id: ObjectID(userDoc._id.toString())}, 
-												[['_id','asc']], {$set: {projects: newProjects}}, 
-												{new: true}, 
-												function(err, record){
-												res.send(record);
-											});
-										}
-										else{
-											//console.log("poopoo");
-											res.send('failed');
-										}
-									});
-								});
-							*/
 							console.log("this shouldn't happen");
+							res.send("failed");
 						}
 						//if members
 						else if(typeof doc.members != 'undefined' && _.indexOf(doc.members, req.user._id) == -1){
@@ -258,7 +230,7 @@ exports.projects = function(req, res){
 exports.moreProjects = function(req, res){
 
 }
-
+/*
 exports.join = function(req, res){
 	if(req.user){
 		if(req.body.joinProject == 'join'){
@@ -312,3 +284,4 @@ exports.join = function(req, res){
 		}
 	}
 }
+*/

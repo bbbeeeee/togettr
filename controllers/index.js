@@ -11,7 +11,7 @@ exports.getDb = function(_db){
 //if logged in render index.html in public
 //in order to have pretty urls
 exports.index = function(req, res){
-	if(!req.user) res.render('index', { title: 'Express' });
+	if(!req.user) res.redirect('/join.html');
 	else res.redirect('/home');
 }
 

@@ -1,0 +1,146 @@
+* {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 300;
+  padding: 0;
+  margin: 0;
+}
+body {
+  height: 100%;
+  width: 100%;
+}
+#sidebar {
+  float: left;
+  width: 250px;
+  position: fixed;
+  overflow: auto;
+  background-color: #ffd633;
+  max-height: 100%;
+  min-height: 100%;
+}
+#sidebar h1 {
+  text-align: center;
+}
+#sidebar nav {
+  width: 100%;
+}
+#sidebar nav ul li,
+#projectList li {
+  display: block;
+}
+#sidebar nav ul li a,
+#projectList ul li a {
+  font-size: 1.3em;
+  padding: 10px 5px;
+  padding-left: 15px;
+  color: #fff;
+  display: block;
+}
+#sidebar nav ul li a:hover,
+#projectList ul li a:hover {
+  background-color: #4da2bf;
+}
+.view {
+  background-color: #4db8db;
+}
+#content {
+  margin-left: 250px;
+  position: absolute;
+  right: 0;
+  left: 0;
+  text-align: center;
+  height: 100%;
+}
+h4 {
+  font-size: 1.5em;
+  margin-bottom: 50px;
+}
+#login-signup {
+  width: 900px;
+  padding: 35px;
+  background-color: #fff;
+  border: 1px solid #cce6ff;
+  margin-left: auto;
+  margin-right: auto;
+  height: 500px;
+  max-height: 500px;
+}
+#login-signup h3 {
+  font-size: 2em;
+}
+#login-signup ul {
+  width: 300px;
+  text-align: left;
+  margin-left: 100px;
+  margin-top: 30px;
+  font-size: 1.3em;
+}
+#login-signup .left {
+  float: left;
+  width: 500px;
+  text-align: center;
+  height: 100%;
+  border-right: 1px solid #cce6ff;
+}
+#login-signup a > input {
+  margin-left: 150px;
+}
+#login-signup .right {
+  float: right;
+  margin-top: 100px;
+  text-align: center;
+}
+#headline {
+  font-size: 5em;
+  text-align: center;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+}
+.logo {
+  padding: 0px 10px;
+}
+input,
+textarea {
+  border: 1px solid #dedede;
+  display: block;
+  padding: 5px;
+  margin: 10px 10px 10px 10px;
+  font-size: 1.2em;
+}
+input[type='submit'],
+textarea[type='submit'] {
+  border: none;
+  padding: 10px;
+  background-color: #e4f1f6;
+}
+input[type='submit']:hover,
+textarea[type='submit']:hover {
+  background-color: #eff7fa;
+}
+.frontPageForm {
+  margin-left: auto;
+  margin-right: auto;
+}
+b {
+  font-weight: 400;
+}
+#how {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.3em;
+}
+#how h2 {
+  font-size: 3em;
+}
+#how #intro {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#about {
+  height: 100%;
+}
+#about p {
+  padding-top: 20%;
+}

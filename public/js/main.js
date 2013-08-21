@@ -16,12 +16,14 @@ requirejs.config({
   }
 });
 require([
-  'models/comment', 
+  'models/comment',
+  'models/contribution',
   'models/idea', 
   'models/project', 
   'models/task', 
   'models/user',
   'collections/comments',
+  'collections/contributions',
   'collections/ideas',
   'collections/projects',
   'collections/tasks',
@@ -35,11 +37,13 @@ require([
   ],
   function(
     Comment,
+    Contribution,
     Idea,
     Project,
     Task,
     User,
     Comments,
+    Contributions,
     Ideas,
     Projects,
     Tasks,
@@ -108,36 +112,41 @@ $('#toggleSidebar').click(function(){
 window.projects = new Projects();
 window.ideas = new Ideas();
 window.comments = new Comments();
+window.contributions = new Contributions();
 window.tasks = new Tasks();
 window.users = new Users();
 
 users.fetch({data: $.param({currentUser: true}), 
   success: function(uuser){
+    
     window.currentUser = uuser.models[0];
+    console.log(window.currentUser);
+    var j = new Date(window.currentUser.attributes.dateCreated);
+    console.log(new Date(window.currentUser.attributes.dateCreated).getDate());
+
   }
 }); 
 
 
 
 window.projects.fetch();
-console.log(window.projects)
+console.log(window.projects);
 
 
 function getUserProjects(){
    window.users.fetch({data: $.param({currentUser: true}), 
-      success: function(uuser){
+      success: function(uuser, res, options){
         window.projects.fetch();
         currentUser = uuser.models[0];
-        console.log(currentUser.attributes.projects);
-        console.log(projects);
-        _projects = currentUser.attributes.projects;
+        _projects = window.currentUser.attributes.projects;
         var _userProjects = [];
-        //need logic to test if already queried for projects
+        
         
         for(var i = 0; i < _projects.length; i++){
           var x = window.projects.get({id: _projects[i]});
           console.log(_projects[i]);
-          console.log(window.projects)
+          console.log(window.projects);
+          //check if projects already in here         
           window.projects.fetch({data: $.param({_id: _projects[i]}),
             success: function(_theProject, response, options){
               //_userProjects[i] = projects.where({_id: _projects[i]}); 
@@ -152,13 +161,15 @@ function getUserProjects(){
         console.log("hahah");
         //window.template.fillTemplate(that, '#user-project-list-template', {userProjects: _userProjects});
           
+      },
+      error: function(model, xhr, options){
+        console.log("screwed");
       }
         
     });
 }
 
 getUserProjects();
-
 
 
 
@@ -171,6 +182,8 @@ var projectListView = new ProjectListView();
 var Router = Backbone.Router.extend({
   routes: {
     '': 'home',
+    'incubator': 'fascinatory',
+    'fascinatory': 'fascinatory',
     'explore': 'explore',
     'explore?*queryString': 'exploreMore',
     'project/:identifier': 'project',
@@ -181,7 +194,7 @@ var Router = Backbone.Router.extend({
     homeView.render();
 
   },
-  explore: function(){
+  fascinatory: function(){
     exploreView.render();
   },
   exploreMore: function(queryString){

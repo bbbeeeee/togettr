@@ -26,7 +26,11 @@ exports.add = function(req, res) {
         console.log(err);
         res.send('failed');
       }
-      collection.insert({task: req.body.task, project: req.body.projectIdentifier}, 
+      collection.insert({task: req.body.task, 
+        project: req.body.projectIdentifier, 
+        creator: ObjectID(req.user._id.toString()),
+        dateCreated: new Date()
+      },
         function(err, doc){console.log(doc);res.send(doc);});
       
     });
@@ -45,7 +49,10 @@ exports.getAll = function(req, res){
     if(req.query){
       console.log(req.query);
       db.collection('tasks', function(err, collection){
-        collection.find({project: req.query.project}, {limit: 10, skip: req.query.page *10}, function(err, cursor){
+        if(req.query.project){
+        collection.find({project: req.query.project}, 
+          {limit: 10, skip: req.query.page *10, sort:[['dateCreated', -1]]}, 
+          function(err, cursor){
           if(err){
             res.send('failed')
           }else{
@@ -53,8 +60,22 @@ exports.getAll = function(req, res){
               res.json(documents)
             });
           }
-        })
+        });
+      }
+      else if(req.query._id){
+          collection.find({_id: ObjectID(req.query._id.toString())}, 
+          {limit: 1}, 
+          function(err, cursor){
+          if(err){
+            res.send('failed')
+          }else{
+            cursor.toArray(function(err, documents){
+              res.json(documents)
+            });
+          }
       });
+    }
+  });
     }
     else res.send("lol");
   }
@@ -65,7 +86,7 @@ exports.getAll = function(req, res){
 exports.del = function(req, res) {
   if(req.user){
     db.collection('tasks', function(err, col){
-      col.remove({_id: ObjectID(req.query._id)}, {w: 1, single: true}, function(err, num){
+      col.remove({_id: ObjectID(req.params.id)}, {w: 1, single: true}, function(err, num){
         assert.equal(null, err);
         assert.equal(1, num);
         res.send(undefined);
@@ -78,7 +99,11 @@ exports.del = function(req, res) {
 }
 
 exports.update = function(req, res){
+  if(req.user){
+    db.collection('tasks', function(err, col){
 
+    });
+  } 
 }
 
 exports.finish = function(req, res){

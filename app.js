@@ -62,6 +62,7 @@ MongoClient.connect("mongodb://localhost:27017/youtaan", function(err, db){
   require('./controllers/user').getDb(db);
   require('./controllers/project').getDb(db);
   require('./controllers/discussion').getDb(db);
+  require('./controllers/contribution').getDb(db);
   require('./controllers/task').getDb(db);
   require('./controllers/idea').getDb(db);
   //give routes, passport, etc access to db

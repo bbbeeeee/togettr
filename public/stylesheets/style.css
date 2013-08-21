@@ -6,7 +6,7 @@
 }
 body,
 body > *,
-#container > * {
+#container > *:not(#content) {
   height: 100%;
 }
 a {
@@ -21,13 +21,25 @@ ul {
 }
 input,
 textarea {
-  border: 2px solid #dedede;
+  -webkit-appearance: none;
+  border: 1px solid #dedede;
   padding: 5px;
   margin: 10px 10px 10px 10px;
-  font-size: 1.3em;
+  font-size: 1.2em;
 }
-textarea {
-  margin-left: 60px;
+input[type='submit'],
+textarea[type='submit'],
+input[type='button'],
+textarea[type='button'] {
+  border: none;
+  padding: 10px;
+  background-color: #82cde6;
+}
+input[type='submit']:hover,
+textarea[type='submit']:hover,
+input[type='button']:hover,
+textarea[type='button']:hover {
+  background-color: #a6dced;
 }
 .title {
   font-family: 'Ubuntu', sans-serif;
@@ -35,6 +47,7 @@ textarea {
 }
 .textcenter {
   text-align: center;
+  width: 100%;
 }
 #sidebar {
   float: left;
@@ -42,11 +55,13 @@ textarea {
   position: fixed;
   overflow: auto;
   background-color: #ffd633;
+  max-height: 100%;
 }
 #toggleSidebar {
   margin-left: 210px;
-  margin-top: 5px;
-  z-index: 1;
+  height: 50px;
+  max-height: 50px;
+  z-index: 10;
   color: #fefefe;
   position: absolute;
 }
@@ -54,9 +69,13 @@ textarea {
   color: #dedede;
 }
 #content {
-  background-color: #e4f1f6;
+  background-color: #4db8db;
   margin-left: 250px;
   padding-left: 50px;
+  position: absolute;
+  right: 0;
+  left: 0;
+  min-height: 100%;
 }
 #logo {
   text-align: center;
@@ -79,10 +98,9 @@ textarea {
 }
 #sidebar nav ul li a:hover,
 #projectList ul li a:hover {
-  background-color: #4da2bf;
+  background-color: #4db8db;
 }
 #projectList {
-  padding-bottom: 10px;
   border-bottom: 1px solid #fff;
 }
 #pListLabel {
@@ -96,36 +114,74 @@ textarea {
 .new-project-form {
   width: 500px;
   max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+  float: left;
+}
+#project {
+  background-color: #4db8db;
 }
 .projectColumnContainer {
-  height: 100%;
   float: left;
-  width: 25%;
-  padding: 0px 20px;
+  width: 400px;
+  background-color: #fff;
+  padding: 0px 20px 20px;
+  margin: 20px 20px;
+  border: 1px solid #cce6ff;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  border-radius: 1px;
 }
-#discussionContainer {
-  border-right: 1px solid #000;
+.projectDescriptionBox {
+  background-color: #fff;
+  border: 1px solid #cce6ff;
+  padding: 0px 20px 20px;
+  margin: 20px 20px;
 }
-#taskContainer {
-  border-left: 1px solid #000;
+.projectColumnTitle,
+.projectTitle,
+.exploreProjectBox > h3 {
+  border-bottom: 1px solid #e4f1f6;
+  width: 100%;
+  font-size: 1.5em;
+  margin: 10px 0px;
 }
-#exploreContainer {
-  margin-left: 30px;
+.projectTitle {
+  font-size: 2em;
+}
+.new-thing-form {
+  width: 100px;
+}
+.new-thing-form input:not([type='submit'],
+.new-thing-form [type='button']) {
+  max-width: 80%;
+}
+.projectColumnContainerList {
+  height: 600px;
+  overflow-y: scroll;
+}
+.projectColumnContainerList li {
+  padding: 10px;
+}
+.projectColumnContainerList li:nth-child(odd) {
+  background-color: #f7fbfc;
+}
+.projectColumnContainerList li:nth-child(odd):hover {
+  background-color: #fff;
+}
+.deletable {
+  float: right;
+}
+.deletable:hover {
+  color: #f66;
 }
 .exploreProjectBox {
   display: block;
   float: left;
   padding: 15px 30px;
   background-color: #fff;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  border: 3px solid #ffd633;
-  margin: 0px 5px;
+  border: 1px solid #cce6ff;
+  margin: 5px 5px;
   width: 300px;
-  height: 20%;
+  height: 250px;
 }
 .exploreProjectBox h3 {
   font-size: 1.5em;
@@ -136,6 +192,11 @@ textarea {
 }
 .join-form {
   float: right;
+  margin-right: 40px;
+}
+.join-form input[type='submit'] {
+  padding: 40px;
+  font-size: 1.8em;
 }
 /* Scrollbar */
 ::-webkit-scrollbar {

@@ -10,7 +10,19 @@
         <link rel='author' href='humans.txt'>
     </head>
     <body>
-        
+        <noscript>
+        <style>
+          #container > *{
+            display:none;
+          }
+          #noJs{
+            color:#000;
+          }
+        </style>
+          <div id='noJs'>This page does not work without javascript. Please turn javascript on or download a javascript enabled browser.</div>
+
+      </noscript>
+      <div id='container'>
         <div id='sidebar'>
           
             <h1 id='logo'><a href='#/'>Togettr</a></h1>
@@ -28,20 +40,23 @@
         <div id="content">
           <div id='landing' class='view'>
             <h2 id='headline'>The next big thing is everyone.</h2>
-            <h4>Togettr is a place where ideas are shared and developed through the power of crowdsourcing skills and resources.</h4>
-            <div id='login-signup'>
-                <div class="left">
-                  <h3>$3/month or $20/year to join.</h3>
-                  <h3>What do you get?</h3>
-                  <ul>
-                      <li>Access to all of Togettr's idea database, allowing you to gain inspiration to come up with your own great idea</li>
-                      <li>Ability to work on any project you find interesting (you can log your work and add to resume or portfolio)</li>
-                      <li>Get help with making your own ideas into realities</li>
-                  </ul>
-                  <a href='/signup.html'><input type="submit" value='Sign up!'></a>
+            <h4>Togettr is a place where ideas are shared and developed through the power of crowdsourcing skills, resources, and knowledge.</h4>
+                <div id='login-signup'>
+                <div class="signup">
+                  <h3 id='top'>Join now!</h3>
+                  <form action='/auth/signup' method='post' class='frontPageForm' id='signUpForm'>
+                    <input type="text" maxlength='25' name='firstname' placeholder='first name'>
+                    <input type="text" maxlength='40' name='lastname' placeholder='last name'>
+                    <input type='text' maxlength='200' name='email' placeholder='email' id='pemail'>
+                    <label class='error' id='errorEmail' style='display:none;'></label>
+                    <input id='password' type="password" maxlength='200' name='password' placeholder='password'>
+                    <input id='rpassword' type="password" maxlength='200' name='rpassword' placeholder='repeat password'>
+                    <label class='error' id='errorPassword' style='display:none; '></label>
+                    <input id='suSubmit' type="submit" value='Sign up!'>
+                 </form>
                 </div>
-                <div class="right">
-                <h3>Already in?</h3>
+                <div class="login">
+                <h3 id='top'>Already in?</h3>
                 <h3>Log in now!</h3>
                 <form action='/auth/local' class='frontPageForm' method='post' id='loginForm'>
                     <input type='text' name='username' placeholder='email'>
@@ -50,8 +65,9 @@
                 </form>
                 
                 </div>
+              </div>
             </div>
-          </div>
+         
         <div id="how" class="view">
           
             <h2>How it works:</h2>
@@ -108,12 +124,69 @@
                 }
             }); 
             
-        	//console.log(validate.email("hello@brandontruong.com"));
+        	console.log(validate.email("hello@brandontruong.com"));
         	
 
 
         		
-        	})
+        	$('#signUpForm > input').keyup(function(){
+            $('#signUpForm > input').each(function(){
+                
+                if($(this).val() == ''){
+                  $(this).css('border', '1px solid red');
+                  return false;
+                }
+                else{
+                  $(this).css('border', '1px solid #DEDEDE');
+
+                }
+                
+
+            });
+            /*
+            if($(this).attr('id') == 'password' || $(this).attr('id') == 'rpassword'){
+              $('.errorPassword').text("");
+            }
+*/
+          });
+          $('#signUpForm').on('submit', function(){
+            var notGood = 0;
+            $('#signUpForm > input').each(function(){
+                
+                if($(this).val() == ''){
+                  $(this).css('border', '1px solid red');
+                  return false;
+                }
+                else{
+                  $(this).css('border', '1px solid #DEDEDE');
+
+                }
+                
+
+            });
+            if(validate.email($('#pemail').val()) == false){
+              $('#errorEmail').show();
+              $('#errorEmail').text("Invalid email");
+              notGood = 1;
+            }
+            if($('#rpassword').val() != $('#password').val()){
+              $('#errorPassword').show();
+              $('#errorPassword').text("Passwords do not match");
+              notGood = 1;
+            }
+            if($('#password').val() == ''){
+              $('#errorPassword').show();
+              $('#errorPassword').text("Please enter a password");
+              notGood = 1;
+            }
+            
+            if(notGood == 1){
+              return false;
+            }
+            else return true;
+            return false;
+          });
         </script>
+      </div>
     </body>
 </html>

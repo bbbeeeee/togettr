@@ -19,6 +19,7 @@ var mongoose = require('mongoose')
   , idea = require('../controllers/idea.js')
   , contribution = require('../controllers/contribution.js')
 	, controllers = require('../controllers');
+
 module.exports = function(app, passport, db){
 	
   //app.get('/login', controllers.login);
@@ -49,6 +50,7 @@ module.exports = function(app, passport, db){
   app.get('/api/idea', idea.getAll);
   app.get('/api/idea/:id', idea.getOne);
   app.del('/api/idea/:id', idea.del);
+  app.put('/api/idea/:id', idea.update);
 
   app.post('/api/discussion', discussion.addComment);
   app.get('/api/discussion', discussion.getAllComments);
@@ -59,7 +61,8 @@ module.exports = function(app, passport, db){
   app.get('/api/contribution', contribution.getAll);
   app.get('/api/contribution/:id', contribution.getOne);
   app.del('/api/contribution/:id', contribution.del);
-
+  app.put('/api/contributions/:id', contribution.update);
+  
   app.post('/api/task', task.add);
   app.get('/api/task', task.getAll);
   app.get('/api/task/:id', task.getOne);

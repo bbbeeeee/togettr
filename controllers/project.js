@@ -29,6 +29,7 @@ exports.get = function(req, res){
 			console.log(req.query);
 			db.collection('projects', function(err, collection){
 				if(req.query == {} || !req.query){
+					//no query
 					collection.find({}, function(err, cursor){
 						cursor.toArray(function(err, documents){
 							console.log(documents);
@@ -37,6 +38,7 @@ exports.get = function(req, res){
 					});
 				}
 				else if(req.query.page){
+					//more pages
 					console.log(req.query.page);
 					var limit = 10;
 					var skip = (req.query.page - 1) * 10;
@@ -50,7 +52,7 @@ exports.get = function(req, res){
 				else{
 					var limit = req.query.page ? req.query.page*10 : 2;
 					if(req.query._id){
-
+						//just one
 						//req.query._id = ObjectID(req.query._id);
 						console.log(req.query._id);
 						collection.find({_id: ObjectID(req.query._id.toString())}, {limit: 1}, function(err, cursor){
@@ -62,6 +64,7 @@ exports.get = function(req, res){
 						});
 					}
 					else{
+						//explore 1st page
 						collection.find(req.query, {limit: limit}, function(err, cursor){
 						cursor.toArray(function(err, documents){
 							//console.log("lols");
@@ -110,7 +113,10 @@ exports.create = function(req, res) {
 																		idea: req.body.idea,
 																		originator: req.user._id,
 																		dateCreated: new Date(),
-																		members: []},
+																		members: [],
+																		upvotes: 0,
+																		downvotes: 0
+																		},
 														{safe: true},
 														function(err, doc){ console.log(doc); res.send(doc); }); 
 
@@ -143,11 +149,7 @@ exports.del = function(req, res){
 
 exports.update = function(req, res){
 	if(req.user){
-		console.log("jdshflkdsjaflkj");
-		console.log(req.body);
 		if(req.body.updateType == 'join'){
-		//db.findOne({req.user._id})
-			
 			db.collection('projects', function(err, collection){
 				collection.findOne({_id: ObjectID(req.body.projectId)}, function(err, doc){
 					if(err){
@@ -157,8 +159,6 @@ exports.update = function(req, res){
 
 						//console.log(_.indexOf(doc.members, req.user._id));
 						//if no members yet.
-						console.log("lo");
-						console.log(doc.members);
 						if(!doc.members){
 							console.log("this shouldn't happen");
 							res.send("failed");

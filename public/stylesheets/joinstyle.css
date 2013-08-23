@@ -3,22 +3,20 @@
   font-weight: 300;
   padding: 0;
   margin: 0;
+  color: #fff;
 }
 body {
   height: 100%;
   width: 100%;
 }
-#sidebar {
-  float: left;
-  width: 250px;
-  position: fixed;
-  overflow: auto;
-  background-color: #ffd633;
-  max-height: 100%;
-  min-height: 100%;
-}
-#sidebar h1 {
+body h1 {
   text-align: center;
+}
+h3 {
+  color: #000;
+}
+.error {
+  color: #f00;
 }
 #sidebar nav {
   width: 100%;
@@ -54,41 +52,6 @@ h4 {
   font-size: 1.5em;
   margin-bottom: 50px;
 }
-#login-signup {
-  width: 900px;
-  padding: 35px;
-  background-color: #fff;
-  border: 1px solid #cce6ff;
-  margin-left: auto;
-  margin-right: auto;
-  height: 500px;
-  max-height: 500px;
-}
-#login-signup h3 {
-  font-size: 2em;
-}
-#login-signup ul {
-  width: 300px;
-  text-align: left;
-  margin-left: 100px;
-  margin-top: 30px;
-  font-size: 1.3em;
-}
-#login-signup .left {
-  float: left;
-  width: 500px;
-  text-align: center;
-  height: 100%;
-  border-right: 1px solid #cce6ff;
-}
-#login-signup a > input {
-  margin-left: 150px;
-}
-#login-signup .right {
-  float: right;
-  margin-top: 100px;
-  text-align: center;
-}
 #headline {
   font-size: 5em;
   text-align: center;
@@ -103,10 +66,12 @@ a {
 input,
 textarea {
   border: 1px solid #dedede;
+  color: #000;
   display: block;
   padding: 5px;
   margin: 10px 10px 10px 10px;
   font-size: 1.2em;
+  width: 200px;
 }
 input[type='submit'],
 textarea[type='submit'] {
@@ -143,4 +108,35 @@ b {
 }
 #about p {
   padding-top: 20%;
+}
+@media (min-width: 992px) {
+  #login-signup {
+    width: 502px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    height: 350px;
+    padding: 30px;
+  }
+  .signup {
+    float: left;
+    height: 100%;
+    padding-right: 30px;
+    border-right: 1px solid #cce6ff;
+  }
+  .login {
+    height: 100%;
+    float: left;
+    margin-left: 30px;
+    margin-top: 40px;
+  }
+  #sidebar {
+    float: left;
+    width: 250px;
+    position: fixed;
+    overflow: auto;
+    background-color: #ffd633;
+    max-height: 100%;
+    min-height: 100%;
+  }
 }

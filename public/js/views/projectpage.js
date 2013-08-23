@@ -67,39 +67,43 @@ define(['collections/comments',
       }});
     */
     window.ideas.fetch
-    ({remove: false, data: $.param({project: pid, page: 0}),
+    ({add: true, remove: false, data: $.param({project: pid, page: 0}),
       success: function(ideaCollection, response, options){
         console.log(window.ideas);
-        window.tasks.fetch({remove: false, data: $.param({project: pid, page: 0}),
+        window.tasks.fetch({add: true, remove: false, data: $.param({project: pid, page: 0}),
           success: function(taskCollection, response, options){
-            window.contributions.fetch({remove: false, data: $.param({project: pid, page: 0}),
+            window.contributions.fetch({add: true, remove: false, data: $.param({project: pid, page: 0}),
               success: function(contributionCollection, response, options){
                 var theProject = window.projects.where({identifier: pid})[0];
                 if(theProject === undefined){
-                  window.projects.fetch({remove: false, data: $.param({identifier:pid}),
+                  window.projects.fetch({add: true, remove: false, data: $.param({identifier:pid}),
                     success: function(_theProject, response, options){
                       theProject = window.projects.where({identifier: pid})[0];
-                      console.log(theProject);
-                      console.log(contributionCollection);
+                      var ideas = window.ideas.where({project: pid});
+                      var tasks = window.tasks.where({project: pid});
+                      var contributions = window.contributions.where({project: pid});
                       template.fillTemplate(that, '#project-page-template', {
                         Project: theProject,
                         identifier: pid,
                         currentUser: currentUser,
-                        ideas: ideaCollection.models,
-                        tasks: taskCollection.models,
-                        contributions: contributionCollection.models
+                        ideas: ideas,
+                        tasks: tasks,
+                        contributions: contributions
                       });
                     }});
 
                 }
                 else{
+                  var ideas = window.ideas.where({project: pid});
+                      var tasks = window.tasks.where({project: pid});
+                      var contributions = window.contributions.where({project: pid});
                   template.fillTemplate(that, '#project-page-template', {
                     Project: theProject,
                     identifier: pid,
                     currentUser: currentUser,
-                    ideas: ideaCollection.models,
-                    tasks: taskCollection.models,
-                    contributions: contributionCollection.models
+                    ideas: ideas,
+                    tasks: tasks,
+                    contributions: contributions
                   });
                 }
             }

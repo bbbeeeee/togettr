@@ -3,21 +3,19 @@
 	font-weight 300
 	padding 0
 	margin 0
+	color #FFF
 body
 	height 100%
 	width 100%
 
-#sidebar 
-	float left 
-	width 250px 
-	position fixed 
-	overflow auto 
-	background-color #FFD633
-	max-height 100%
-	min-height 100%
+
 
 	h1
 		text-align center
+h3
+	color #000
+.error
+	color red
 #sidebar nav 
 	width 100% 
  
@@ -44,35 +42,7 @@ body
 h4
 	font-size 1.5em
 	margin-bottom 50px
-#login-signup
-	width 900px
-	padding 35px
-	background-color white
-	border 1px solid #CCE6FF
-	margin-left auto
-	margin-right auto
-	height 500px
-	max-height 500px
-	h3
-		font-size 2em
-	ul
-		width 300px
-		text-align left
-		margin-left 100px
-		margin-top 30px
-		font-size 1.3em
-	.left
-		float left
-		width 500px
-		text-align center
-		height 100%
-		border-right 1px solid #CCE6FF
-	a > input
-		margin-left 150px
-	.right
-		float right
-		margin-top 100px
-		text-align center
+
 
 #headline
 	font-size 5em
@@ -84,10 +54,12 @@ a
 	padding 0px 10px
 input, textarea 
 	border 1px solid #DEDEDE
+	color #000
 	display block
 	padding 5px
 	margin 10px 10px 10px 10px
 	font-size 1.2em 
+	width 200px
 	&[type='submit']
 		border none
 		padding:10px
@@ -115,3 +87,32 @@ b
 	height 100%
 	p 
 		padding-top 20%
+
+@media (min-width: 992px)
+
+	#login-signup
+		width 502px
+
+		margin-left auto
+		margin-right auto
+		background-color white
+		height 350px
+		padding 30px
+	.signup
+		float left
+		height 100%
+		padding-right 30px
+		border-right 1px solid #CCE6FF
+	.login
+		height 100%
+		float left
+		margin-left 30px
+		margin-top 40px
+	#sidebar 
+		float left 
+		width 250px 
+		position fixed 
+		overflow auto 
+		background-color #FFD633
+		max-height 100%
+		min-height 100%

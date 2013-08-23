@@ -29,6 +29,7 @@ require([
   'collections/tasks',
   'collections/users',
   'views/explore',
+  'views/incubator',
   'views/home',
   'views/newproject',
   'views/projectpage',
@@ -49,6 +50,7 @@ require([
     Tasks,
     Users,
     ExploreView,
+    IncubatorView,
     HomeView,
     NewProjectView,
     ProjectPageView,
@@ -182,7 +184,7 @@ var projectListView = new ProjectListView();
 var Router = Backbone.Router.extend({
   routes: {
     '': 'home',
-    'incubator': 'fascinatory',
+    'incubator': 'incubator',
     'fascinatory': 'fascinatory',
     'explore': 'explore',
     'explore?*queryString': 'exploreMore',
@@ -193,6 +195,9 @@ var Router = Backbone.Router.extend({
     //projectListView.render();
     homeView.render();
 
+  },
+  incubator: function(){
+    $('#content').html('<div>Helo</div>')
   },
   fascinatory: function(){
     exploreView.render();

@@ -29,7 +29,9 @@ exports.add = function(req, res) {
       collection.insert({contribution: req.body.contribution, 
         project: req.body.projectIdentifier,
         creator: ObjectID(req.user._id.toString()),
-        dateCreated: new Date()
+        dateCreated: new Date(),
+        upvotes: 0,
+        downvotes: 0
       },
 
         function(err, doc){console.log(doc);res.send(doc);});
@@ -100,5 +102,50 @@ exports.del = function(req, res){
   }
   else{
     res.send("not logged in");
+  }
+}
+
+exports.update = function(req, res){
+  if(req.user){
+    if(req.body.updateType =='upvote'){
+      db.collection('ideas', function(err, collection){
+        collection.findOne({_id: ObjectID(req.body.projectId)}, function(err, doc){
+          if(err){
+            res.send('failed');
+          }
+          else if(doc){
+            collection.findAndModify({_id: doc._id},
+              [['_id','asc']],
+              {$set: {upvotes: doc.upvotes + 1}},
+              function(err, object){
+                if(err) console.log(err.message);
+                else{
+                  res.send(object);
+                }
+              });
+          }
+        });
+      });
+    }
+    else if(req.body.updateType =='downvote'){
+      db.collection('ideas', function(err, collection){
+        collection.findOne({_id: ObjectID(req.body.projectId)}, function(err, doc){
+          if(err){
+            res.send('failed');
+          }
+          else if(doc){
+            collection.findAndModify({_id: doc._id},
+              [['_id','asc']],
+              {$set: {upvotes: doc.upvotes - 1}},
+              function(err, object){
+                if(err) console.log(err.message);
+                else{
+                  res.send(object);
+                }
+              });
+          }
+        });
+      });
+    }
   }
 }

@@ -29,7 +29,10 @@ exports.add = function(req, res) {
       collection.insert({task: req.body.task, 
         project: req.body.projectIdentifier, 
         creator: ObjectID(req.user._id.toString()),
-        dateCreated: new Date()
+        dateCreated: new Date(),
+        completed: false,
+        upvotes: 0,
+        downvotes: 0
       },
         function(err, doc){console.log(doc);res.send(doc);});
       
@@ -100,10 +103,67 @@ exports.del = function(req, res) {
 
 exports.update = function(req, res){
   if(req.user){
-    db.collection('tasks', function(err, col){
-
-    });
-  } 
+    if(req.body.updateType =='upvote'){
+      db.collection('ideas', function(err, collection){
+        collection.findOne({_id: ObjectID(req.body.projectId)}, function(err, doc){
+          if(err){
+            res.send('failed');
+          }
+          else if(doc){
+            collection.findAndModify({_id: doc._id},
+              [['_id','asc']],
+              {$set: {upvotes: doc.upvotes + 1}},
+              function(err, object){
+                if(err) console.log(err.message);
+                else{
+                  res.send(object);
+                }
+              });
+          }
+        });
+      });
+    }
+    else if(req.body.updateType =='downvote'){
+      db.collection('ideas', function(err, collection){
+        collection.findOne({_id: ObjectID(req.body.projectId)}, function(err, doc){
+          if(err){
+            res.send('failed');
+          }
+          else if(doc){
+            collection.findAndModify({_id: doc._id},
+              [['_id','asc']],
+              {$set: {upvotes: doc.upvotes - 1}},
+              function(err, object){
+                if(err) console.log(err.message);
+                else{
+                  res.send(object);
+                }
+              });
+          }
+        });
+      });
+    }
+    else if(req.body.updateType =='complete'){
+      db.collection('ideas', function(err, collection){
+        collection.findOne({_id: ObjectID(req.body.projectId)}, function(err, doc){
+          if(err){
+            res.send('failed');
+          }
+          else if(doc){
+            collection.findAndModify({_id: doc._id},
+              [['_id','asc']],
+              {$set: {completed: true}},
+              function(err, object){
+                if(err) console.log(err.message);
+                else{
+                  res.send(object);
+                }
+              });
+          }
+        });
+      });
+    }
+  }
 }
 
 exports.finish = function(req, res){

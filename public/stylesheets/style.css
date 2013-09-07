@@ -41,6 +41,12 @@ input[type='button']:hover,
 textarea[type='button']:hover {
   background-color: #a6dced;
 }
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
 .title {
   font-family: 'Ubuntu', sans-serif;
   font-weight: 400;
@@ -131,6 +137,7 @@ textarea[type='button']:hover {
   border-radius: 1px;
 }
 .projectDescriptionBox {
+  float: none;
   background-color: #fff;
   border: 1px solid #cce6ff;
   padding: 0px 20px 20px;
@@ -138,14 +145,22 @@ textarea[type='button']:hover {
 }
 .projectColumnTitle,
 .projectTitle,
-.exploreProjectBox > h3 {
+.exploreProjectBox {
   border-bottom: 1px solid #e4f1f6;
   width: 100%;
-  font-size: 1.5em;
   margin: 10px 0px;
 }
 .projectTitle {
-  font-size: 2em;
+  float: none;
+}
+.projectTitleText {
+  float: left;
+}
+.join-form {
+  float: left;
+}
+.projectIdea {
+  float: none;
 }
 .new-thing-form {
   width: 100px;
@@ -183,20 +198,17 @@ textarea[type='button']:hover {
   width: 300px;
   height: 250px;
 }
-.exploreProjectBox h3 {
+.exploreProjectBox .projectTitleBox {
+  border-bottom: 1px solid #e4f1f6;
+  display: block;
   font-size: 1.5em;
-  margin-bottom: 10px;
+}
+.exploreProjectBox .exploreUtilBox {
+  border-bottom: 1px solid #e4f1f6;
+  padding: 10px;
 }
 .exploreProjectBox:hover {
   background-color: #f4f9fb;
-}
-.join-form {
-  float: right;
-  margin-right: 40px;
-}
-.join-form input[type='submit'] {
-  padding: 40px;
-  font-size: 1.8em;
 }
 /* Scrollbar */
 ::-webkit-scrollbar {

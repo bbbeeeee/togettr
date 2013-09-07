@@ -6,7 +6,11 @@ define(['models/project'], function(Project) {
       //return -m.get('dateCreated').getTime();
     },
     parse: function(response){
-     
+      console.log("Projects:");
+      console.log(response);
+      for(var i = 0; i < response.length; i++){
+        response[i].shortIdea = response[i].idea.substring(0, 230) + "...";
+      }
       return response;
     }
 	});

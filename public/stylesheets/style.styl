@@ -39,7 +39,11 @@ input, textarea
 		&:hover
 			background-color #A6DCED
 
+.left
+	float left
 
+.right
+	float right
 .title 
 	font-family  'Ubuntu', sans-serif 
 	font-weight 400
@@ -124,21 +128,25 @@ input, textarea
 	border 1px solid #CCE6FF
 	border-radius(1px)
 .projectDescriptionBox
-
+	float none
 	background-color #FFF
 	border 1px solid #CCE6FF
 	padding 0px 20px 20px
 	margin 20px 20px
 
-.projectColumnTitle, .projectTitle, .exploreProjectBox > h3
+.projectColumnTitle, .projectTitle, .exploreProjectBox
 	border-bottom 1px solid #E4F1F6
 	width 100%
-	font-size 1.5em
 	margin 10px 0px
-
-.projectTitle
-	font-size 2.0em
 	
+.projectTitle
+	float none
+.projectTitleText
+	float left
+.join-form
+	float left
+.projectIdea
+	float none
 .new-thing-form
 	width 100px
 	input:not([type='submit'], [type='button'])
@@ -170,19 +178,16 @@ input, textarea
 	margin 5px 5px
 	width 300px
 	height 250px
-	h3
+	.projectTitleBox
+		border-bottom 1px solid #E4F1F6
+		display block
 		font-size 1.5em
-		margin-bottom 10px
-	
+	.exploreUtilBox
+		border-bottom 1px solid #E4F1F6
+		padding 10px
 	&:hover
 		background-color:#F4F9FB
 
-.join-form
-	float right
-	margin-right 40px
-	input[type='submit']
-		padding 40px
-		font-size 1.8em
 
 /* Scrollbar */
 

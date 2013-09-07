@@ -13,6 +13,7 @@ define(['collections/projects',
     window.projects.fetch({data: $.param({page: 1}), 
       success: function(pprojects){
         console.log(window.projects);
+        
         window.template.fillTemplate(that, '#explore-template', {projects: pprojects.models});
       },
       error: function(model, xhr, options){

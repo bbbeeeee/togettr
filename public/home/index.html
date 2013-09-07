@@ -49,8 +49,14 @@
             <% _.each(projects, function(project){ console.log(project); %>
             <a href="#/project/<%= project.attributes.identifier %>">
               <li class="exploreProjectBox">
-                  <h3><%= project.attributes.name %></h3>
-                  <p><%= project.attributes.idea %></p>
+                  <div class='projectTitleBox'>
+                    <h3><%= project.attributes.name %></h3>   
+                  </div>
+                  <div class='exploreUtilBox'>
+                    <i class='icon-thumbs-up'></i>
+                    <i class='icon-thumbs-down right'></i>
+                  </div>
+                  <p><%= project.attributes.shortIdea %></p>
               </li>
             </a>
             <% }); %>
@@ -62,17 +68,22 @@
       <script type='text/template' id='project-page-template'>
         <div id="project">
           <div class='projectDescriptionBox'>
-            <div class='projectTitle'><%= Project.attributes.name %></div>
+            <div class='projectTitle'>
+              <div class='projectTitleText'><%= Project.attributes.name %>
+              <form class='join-form'>
+                <input type="hidden" name="projectId" value="<%= Project.attributes._id %>">
+                <input type="hidden" name="joinProject" value="join">
+                <input type="hidden" name="userId" value="<%= currentUser.attributes._id %>">
+                <input type='submit' value='Join'>
+              </form></div>
+              
+            </div>
             <div class='projectIdea'><%= Project.attributes.idea %></div>
             <div class='projectMembers'><%= Project.attributes.members %></div>
+            
           </div>
           <%  if(!_.contains(currentUser.attributes.projects, Project.id)){ %>
-          <form class='join-form'>
-            <input type="hidden" name="projectId" value="<%= Project.attributes._id %>">
-            <input type="hidden" name="joinProject" value="join">
-            <input type="hidden" name="userId" value="<%= currentUser.attributes._id %>">
-            <input type='submit' value='Join'>
-          </form>
+          
           <% } %>
           <div id="projInfo"></div>
           <div id="contributionContainer" class='projectColumnContainer'>
@@ -139,7 +150,7 @@
       <script type='text/template' id='new-project-template'>
         <h1>Have a new project idea? Submit it now!</h1>
         <form class='new-project-form'>
-          <input type="text" name='name' placeholder='name'>
+          <input type="text" name='name' placeholder='name' maxlength="25">
           <input type="text" name='identifier' placeholder='identifier'>
           <input type="text" name='category' placeholder='category'>
           <textarea name='idea' placeholder='idea/concept' cols='50' rows='20'></textarea>

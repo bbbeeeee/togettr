@@ -48,7 +48,30 @@ define(['collections/comments',
     var that = this;
     console.log(pid);
     console.log(window.projects);
+    
+    function moreOf(ev, thing, thingId, thingName){
+      var page = $(thingId + ' > li').length / 10;
+            page = Math.ceil(page);
+            thing.fetch({data: $.param({project: this.pid, page: page}),
+              success: function(items, res, options){
+                if(items.length != 0){
+                  _.each(items.models, function(item){
+                    if(item.attributes.creator == window.currentUser.attributes._id){
 
+                      $(thingId).append('<li>' + item.get(thingName)  + 
+                      '<i id="' + item.attributes._id + '" class="icon-trash deletable"></i></li>');
+
+                    }
+                    else{
+                      $(thingId).append('<li>' + item.get(thingName)  + 
+                      '</li>');
+                    }
+                  });
+                }
+                else console.log("no more");
+              }});
+            console.log(page);
+    }
     //maybe add later: only fetch again if do not already have in there
     /*
     if(window.projects.where({identifier: pid})[0] && window.contributions.where({project: pid}) != []){
@@ -277,69 +300,13 @@ define(['collections/comments',
     switch (ev.currentTarget.name)
     {
       case "contributions":
-        var page = $('#contributions > li').length / 10;
-        page = Math.ceil(page);
-        window.contributions.fetch({data: $.param({project: this.pid, page: page}),
-          success: function(items, res, options){
-            if(items.length != 0){
-              _.each(items.models, function(item){
-                if(item.attributes.creator == window.currentUser.attributes._id){
-
-                  $('#contributions').append('<li>' + item.get("contribution")  + 
-                  '<i id="' + item.attributes._id + '" class="icon-trash deletable"></i></li>');
-
-                }
-                else{
-                  $('#contributions').append('<li>' + item.get("contribution")  + 
-                  '</li>');
-                }
-              });
-            }
-            else console.log("no more");
-          }});
-        console.log(page);
+        moreOf(ev, window.contributions, "#contributions", "contribution");
         break;
       case "ideas":
-        var page = $('#ideas > li').length / 10;
-        page = Math.ceil(page);
-        window.ideas.fetch({data: $.param({project: this.pid, page: page}),
-          success: function(items, res, options){
-            if(items.length != 0){
-              _.each(items.models, function(item){
-                if(item.attributes.creator == window.currentUser.attributes._id){
-                  $('#ideas').append('<li>' + item.get("idea")  + 
-                  '<i id="' + item.attributes._id + '" class="icon-trash deletable"></i></li>');
-                }
-                else{
-                  $('#ideas').append('<li>' + item.get("idea")  + 
-                  '</li>');
-                }
-              });
-            }
-            else console.log("no more");
-          }});
-        console.log(page);
+        moreOf(ev, window.ideas, "#ideas", "idea");
         break;
       case "tasks":
-        var page = $('#tasks > li').length / 10;
-        page = Math.ceil(page);
-        window.tasks.fetch({data: $.param({project: this.pid, page: page}),
-          success: function(items, res, options){
-            if(items.length != 0){
-              _.each(items.models, function(item){
-                if(item.attributes.creator == window.currentUser.attributes._id){
-                  $('#ideas').append('<li>' + item.get("tasks")  + 
-                  '<i id="' + item.attributes._id + '" class="icon-trash deletable"></i></li>');
-                }
-                else{
-                  $('#ideas').append('<li>' + item.get("tasks")  + 
-                  '</li>');
-                }
-              });
-            }
-            else console.log("no more");
-          }});
-        console.log(page);
+        moreOf(ev, window.tasks, "#tasks", "task");
         break;
     }
   },
@@ -357,7 +324,6 @@ define(['collections/comments',
         if(g == undefined){
           window.contributions.fetch({data: $.param({_id: ev.currentTarget.id}),
             success: function(collection, res, options){
-              console.log("hahassssh");
               var g = window.contributions.where({_id: ev.currentTarget.id})[0];
               g.destroy({
                 success: function(model, response, options){
@@ -370,7 +336,6 @@ define(['collections/comments',
               });
             },
             error: function(collection, response, options){
-              console.log("hahah");
             }
           });
         }
@@ -395,7 +360,6 @@ define(['collections/comments',
           console.log("1");
           window.ideas.fetch({data: $.param({_id: ev.currentTarget.id}),
             success: function(collection, res, options){
-              console.log("hahassssh");
               var g = window.ideas.where({_id: ev.currentTarget.id})[0];
               g.destroy({
                 success: function(model, response, options){
@@ -408,7 +372,6 @@ define(['collections/comments',
               });
             },
             error: function(collection, response, options){
-              console.log("hahah");
             }
           })
         }
@@ -434,7 +397,6 @@ define(['collections/comments',
         if(g == undefined){
           window.tasks.fetch({data: $.param({_id: ev.currentTarget.id}),
             success: function(collection, res, options){
-              console.log("hahassssh");
               var g = window.tasks.where({_id: ev.currentTarget.id})[0];
               g.destroy({
                 success: function(model, response, options){
@@ -447,7 +409,6 @@ define(['collections/comments',
               });
             },
             error: function(collection, response, options){
-              console.log("hahah");
             }
           })
         }

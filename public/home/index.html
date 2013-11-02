@@ -69,13 +69,13 @@
         <div id="project">
           <div class='projectDescriptionBox'>
             <div class='projectTitle'>
-              <div class='projectTitleText'><%= Project.attributes.name %>
+              <div class='projectTitleText'><%= Project.attributes.name %></div>
               <form class='join-form'>
                 <input type="hidden" name="projectId" value="<%= Project.attributes._id %>">
                 <input type="hidden" name="joinProject" value="join">
                 <input type="hidden" name="userId" value="<%= currentUser.attributes._id %>">
                 <input type='submit' value='Join'>
-              </form></div>
+              </form>
               
             </div>
             <div class='projectIdea'><%= Project.attributes.idea %></div>

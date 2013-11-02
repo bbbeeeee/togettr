@@ -12,28 +12,7 @@ var Db = require('mongodb').Db
   , bcrypt = require('bcrypt')
 	, LocalStrategy = require('passport-local').LocalStrategy
 	, FacebookStrategy = require('passport-facebook').Strategy;
-/*
-
-  if(req.user){
-    db.collection('', function(err, collection){
-      collection.findOne({name: req.body.name}, function(err, doc){
-        if(err){
-
-        }
-        else if(doc == null){
-
-        }
-        else if(doc){
-          
-        }
-      })
-    })
-  }
-  else{
-    res.redirect('/');
-  }
-
-*/	
+	
 var db;
 
 exports.getDb = function(_db){

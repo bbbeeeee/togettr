@@ -16,6 +16,6 @@ exports.index = function(req, res){
 }
 
 exports.failed = function(req, res){
-	res.render('failed', { title: 'NONONONONO'});
+	res.render('failed', { title: 'Uh oh...'});
 }
 

@@ -31,13 +31,8 @@ define(['collections/users',
                 _theProject.models[0].attributes.name + '</a></li>'); 
           }
         });
-
-        }
-        console.log("hahah");
-        //window.template.fillTemplate(that, '#user-project-list-template', {userProjects: _userProjects});
-          
+        } 
       }
-        
     });
   }
   });

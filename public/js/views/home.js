@@ -3,7 +3,7 @@ define([], function(Users, Projects, TemplUtil){
 	var HomeView = Backbone.View.extend({
 	  el: '#content',
 	  render: function(){
-	    $('#content').html("Need to make home (tasks, updates, etc.) page layout");
+	    $('#content').html("Check out your projects, join one in the fascinatory, or start a new one!");
 	  }
 	});
 	return HomeView;

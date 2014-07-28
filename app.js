@@ -1,8 +1,3 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express'),
    http = require('http'), 
    path = require('path'), 
@@ -38,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use( express.cookieParser() );
 app.use(express.session({
-    secret: "lol",
+    secret: "secret",
     store: new MongoStore({
       url: config.db,
       maxAge: 900000,
@@ -55,7 +50,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-MongoClient.connect("mongodb://localhost:27017/youtaan", function(err, db){
+MongoClient.connect("mongodb://localhost:27017/togettr", function(err, db){
   if(err) return callback(err);
   //give all controllers access to db
   require('./controllers/index').getDb(db);
@@ -68,16 +63,7 @@ MongoClient.connect("mongodb://localhost:27017/youtaan", function(err, db){
   //give routes, passport, etc access to db
   require('./config/passport')(passport, config, db);
   require('./config/routes')(app, passport, db);
-
 });
-
-
-
-
-
-
-
-
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
